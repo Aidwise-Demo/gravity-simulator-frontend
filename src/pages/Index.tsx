@@ -44,6 +44,21 @@ const Index = () => {
         businessVertical,
         targetValue
       );
+      
+      // Log the entire data response
+      console.log('Full API response:', result);
+      
+      // Specifically log the business vertical trend data
+      if (result.trendAnalysis.businessVerticals) {
+        console.log('Business Vertical Trend Data:', {
+          quarters: result.trendAnalysis.businessVerticals.quarters,
+          actual: result.trendAnalysis.businessVerticals.actual,
+          target: result.trendAnalysis.businessVerticals.target
+        });
+      } else {
+        console.warn('No businessVerticals data found in trendAnalysis');
+      }
+      
       setData(result);
     } catch (error) {
       console.error('Error fetching simulation data:', error);
@@ -108,9 +123,9 @@ const Index = () => {
   const hasBusinessVerticalData = data.trendAnalysis.businessVerticals && 
     data.trendAnalysis.businessVerticals.quarters && 
     data.trendAnalysis.businessVerticals.quarters.length > 0 &&
-    data.trendAnalysis.businessVerticals.actual &&
-    data.trendAnalysis.businessVerticals.target;
-
+    data.trendAnalysis.businessVerticals.actualValues &&
+    data.trendAnalysis.businessVerticals.targetValues;
+  
   return (
     <div className="max-w-7xl mx-auto p-4 md:p-6 bg-white relative">
       {/* Updating Overlay */}
@@ -181,8 +196,8 @@ const Index = () => {
               <TrendAnalysis 
                 title="Business Vertical Trend Analysis"
                 quarters={data.trendAnalysis.businessVerticals.quarters}
-                actualValues={data.trendAnalysis.businessVerticals.actual}
-                targetValues={data.trendAnalysis.businessVerticals.target}
+                actualValues={data.trendAnalysis.businessVerticals.actualValues}
+                targetValues={data.trendAnalysis.businessVerticals.targetValues}
               />
             </div>
           )}
