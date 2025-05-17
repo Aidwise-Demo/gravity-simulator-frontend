@@ -375,16 +375,39 @@ const BusinessVerticalRisk = ({
       </h2>
 
       {/* Legend */}
-      <div className="flex gap-6 text-sm mb-6">
-        {Object.entries(POINTER_COLORS).map(([label, colorClass], idx) => (
-          <div key={idx} className="flex items-center space-x-2">
-            <svg className={`w-3.5 h-3.5 ${colorClass} fill-current`} viewBox="0 0 24 24">
-              <path d="M12 2L6 14h12z" />
-            </svg>
-            <span>{label}</span>
-          </div>
-        ))}
-      </div>
+   <div className="flex gap-6 text-sm mb-6 items-center relative">
+  {/* Legend items */}
+  {Object.entries(POINTER_COLORS).map(([label, colorClass], idx) => (
+    <div key={idx} className="flex items-center space-x-2">
+      <svg className={`w-3.5 h-3.5 ${colorClass} fill-current`} viewBox="0 0 24 24">
+        <path d="M12 2L6 14h12z" />
+      </svg>
+      <span>{label}</span>
+    </div>
+  ))}
+
+  {/* Info icon with tooltip */}
+  <div className="group relative ml-4 cursor-pointer">
+    <svg
+      className="w-4 h-4 text-gray-500 hover:text-gray-700"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+    >
+      <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+    </svg>
+
+    {/* Tooltip */}
+    <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
+      <div><strong>Target</strong>: Projected target set for the upcoming period.</div>
+      <div><strong>Current</strong>: Actual performance for the current period.</div>
+      <div><strong>Current*</strong>: Adjusted or estimated current value.</div>
+      <div><strong>Industry Average</strong>: Benchmark average across similar companies.</div>
+      <div><strong>Cut-off</strong>: Maximum allowed threshold or upper bound for simulation.</div>
+    </div>
+  </div>
+</div>
+
+      
 
       {/* Header */}
       <div className="flex w-full text-sm font-medium mb-4">
