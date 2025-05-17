@@ -141,7 +141,7 @@ const Index = () => {
       <div className="flex flex-col space-y-4">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between">
-          <h1 className="text-2xl font-bold">{metric} Target Simulator</h1>
+          <h1 className="text-2xl font-bold text-blue-500"> Dubai Holdings</h1>
           
           <div className="flex flex-col sm:flex-row gap-2 mt-4 md:mt-0">
             <FilterDropdown 
@@ -166,7 +166,7 @@ const Index = () => {
         </div>
         
         {/* Company Name */}
-        <h2 className="text-blue-600 font-medium text-lg">{data.company}</h2>
+        {/* <h2 className="text-blue-600 font-medium text-lg">{data.company}</h2> */}
         
         {/* Upper Section - Gauge and Trend Analysis */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -177,6 +177,7 @@ const Index = () => {
               targetValue={data.summary.targetValue}
               achievementStatus={data.summary.achievementStatus}
               overallValue={data.summary.overallValue}
+               metric={metric}
             />
           </div>
           

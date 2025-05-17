@@ -35,9 +35,10 @@ const ScoreSummary: React.FC<ScoreSummaryProps> = ({
       <div className="text-4xl font-bold mt-1">{formattedScore}</div>
       <div className="text-lg mt-1">{targetsRatio}</div>
       <div className="text-sm">Business verticals</div>
-      <div className="text-sm font-medium mt-2">Targets are Tough</div>
+      <div className="text-sm font-medium mt-2">Face High Target Achievement Risk</div>
     </div>
   );
 };
 
 export default ScoreSummary;
+

@@ -95,7 +95,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
             <Line
               type="monotone"
               dataKey="target"
-              stroke="#38a169"
+              stroke="#9e38a1"
               strokeWidth={2}
               dot={{ r: 3 }}
               activeDot={{ r: 6 }}

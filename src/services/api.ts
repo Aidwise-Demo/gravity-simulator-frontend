@@ -108,7 +108,7 @@ const mockData = {
 // Options for filters
 export const periodOptions = ["Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024", "Q1 2025", "Q2 2025"];
 export const benchmarkOptions = ["Similar Competitors", "Industry Average", "Global Standards", "Regional Leaders"];
-export const metricOptions = ["EBITDA", "Revenue", "Net Income", "Cash Flow"];
+export const metricOptions = ["EBITDA", "Revenue", "EBITDA Margin"];
 
 export interface SimulationData {
   company: string;
