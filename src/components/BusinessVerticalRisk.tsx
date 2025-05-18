@@ -579,15 +579,15 @@
 
 // export default BusinessVerticalRisk;
 import React, { useState, useEffect } from 'react';
-import { fetchSimulationData } from '@/services/api'; // Adjust path if needed
+import { fetchSimulationData } from '@/services/api'; // Keeping original API import
 
 // Tooltip-enhanced Triangle Pointer
 const TrianglePointer = ({ value, label, formatFunc, colorClass }) => (
   <div className="flex flex-col items-center group relative">
-    <svg className={`w-3.5 h-3-5 ${colorClass} fill-current`} viewBox="0 0 24 24">
+    <svg className={`w-3.5 h-3.5 ${colorClass} fill-current`} viewBox="0 0 24 24">
       <path d="M12 2L6 14h12z" />
     </svg>
-    <div className="text-[10px] mt-0.5 bg-white text-gray-900 px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap">
+    <div className="text-[10px] mt-0.5 bg-white text-gray-900 px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap border border-gray-200">
       {formatFunc(value)}
     </div>
     <div className="absolute bottom-full mb-1 hidden group-hover:block bg-gray-700 text-white text-xs rounded px-2 py-1 z-50 whitespace-nowrap">
@@ -768,27 +768,33 @@ const BusinessVerticalRisk = ({
   };
 
   return (
-    <div className="w-full bg-white p-4">
-<div className="flex justify-start items-center mb-6 gap-x-4">
-  <h2 className="text-blue-600 font-medium text-lg">
-    Business Vertical Targets - Risk Assessment & Scenario Analysis
-  </h2>
+    <div className="w-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
+      <div className="flex justify-start items-center mb-6 gap-x-4">
+        <h2 className="text-blue-600 font-medium text-lg">
+          Business Vertical Targets - Risk Assessment & Scenario Analysis
+        </h2>
 
-  {/* Reset button */}
-  <button 
-    onClick={handleReset}
-    disabled={isResetting}
-    className="flex items-center text-gray-600 hover:text-blue-600 transition-colors"
-    title="Reset to default values"
-  >
-    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-    </svg>
-    <span className="ml-1">Reset</span>
-  </button>
-</div>
+        {/* Reset button */}
+        <button 
+          onClick={handleReset}
+          disabled={isResetting}
+          className="flex items-center text-gray-600 hover:text-blue-600 transition-colors border border-gray-300 rounded px-2 py-1 hover:border-blue-400"
+          title="Reset to default values"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          <span className="ml-1">Reset</span>
+        </button>
+      </div>
+      
+      {/* Period & Metric Info */}
+      <div className="mb-4 text-sm text-gray-600">
+        Period: {period} | Benchmark: {benchmark} | Metric: {metric}
+      </div>
+
       {/* Legend */}
-      <div className="flex gap-6 text-sm mb-6 items-center relative">
+      <div className="flex gap-6 text-sm mb-6 items-center relative p-3 bg-gray-50 border border-gray-200 rounded-lg">
         {/* Legend items */}
         {Object.entries(POINTER_COLORS).map(([label, colorClass], idx) => (
           <div key={idx} className="flex items-center space-x-2">
@@ -821,15 +827,15 @@ const BusinessVerticalRisk = ({
       </div>
 
       {/* Header */}
-      <div className="flex w-full text-sm font-medium mb-4">
-        <div className="w-1/4"></div>
+      <div className="flex w-full text-sm font-medium mb-4 px-4 py-2 bg-gray-100 border border-gray-200 rounded-t-lg">
+        <div className="w-1/4">Business Vertical</div>
         <div className="w-1/5 text-center">Predefined Target<br />for Q2 2025</div>
         <div className="w-2/5 text-center">Simulator</div>
         <div className="w-1/5 text-right">Status</div>
       </div>
 
       {verticals.map((vertical, idx) => (
-        <div key={idx} className="mb-16">
+        <div key={idx} className={`mb-16 border-x border-b border-gray-200 px-4 py-2 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}>
           <div className="flex justify-between mb-2">
             <div className="font-medium w-1/4">{vertical.name}</div>
             <div className="font-medium w-1/5 text-center">
@@ -841,7 +847,7 @@ const BusinessVerticalRisk = ({
 
               {/* Target draggable marker - now using predictedNewTarget with fallback */}
               <div
-                className="absolute h-12 w-2 bg-pink-600 cursor-move -top-4 z-10"
+                className="absolute h-12 w-2 bg-pink-600 cursor-move -top-4 z-10 shadow-sm rounded-sm"
                 style={{
                   left: `${getPositionPercentage(
                     vertical.predictedNewTarget !== undefined ? vertical.predictedNewTarget : vertical.predictedTarget, 
@@ -874,7 +880,7 @@ const BusinessVerticalRisk = ({
                 }}
               >
                 <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                  <div className="bg-pink-600 text-white text-xs px-2 py-1 rounded">
+                  <div className="bg-pink-600 text-white text-xs px-2 py-1 rounded shadow-sm border border-pink-700">
                     {/* Display predictedNewTarget if available, otherwise use predictedTarget */}
                     {formatValue(vertical.predictedNewTarget !== undefined ? vertical.predictedNewTarget : vertical.predictedTarget)}
                   </div>
@@ -923,12 +929,23 @@ const BusinessVerticalRisk = ({
             </div>
 
             {/* Status */}
-            <div className="w-1/5 flex justify-end items-center">
-              <div className={`${getStatusColor(vertical.status)} w-4 h-4 rounded-full`}></div>
+            <div className="w-1/5 flex justify-end items-center gap-2">
+              {/* <span className="text-sm">{vertical.status}</span> */}
+              <div className={`${getStatusColor(vertical.status)} w-4 h-4 rounded-full border border-gray-200 shadow-sm`}></div>
             </div>
           </div>
         </div>
       ))}
+
+      {/* Help text */}
+      <div className="mt-4 text-sm text-gray-600 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="flex items-start">
+          <svg className="w-5 h-5 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+          <span>Drag the pink markers to adjust target values. Changes are automatically saved when you release.</span>
+        </div>
+      </div>
     </div>
   );
 };

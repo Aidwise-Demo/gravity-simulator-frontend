@@ -225,6 +225,7 @@ const Index = () => {
             <ScoreSummary
               scorePercent={data.overallScore.scorePercent}
               targetsRatio={data.overallScore.targetsRatio}
+              targetDiff={data.overallScore.targetDiff}
             />
           </div>
         </div>
