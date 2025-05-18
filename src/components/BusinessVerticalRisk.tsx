@@ -789,9 +789,9 @@ const BusinessVerticalRisk = ({
       </div>
       
       {/* Period & Metric Info */}
-      <div className="mb-4 text-sm text-gray-600">
+      {/* <div className="mb-4 text-sm text-gray-600">
         Period: {period} | Benchmark: {benchmark} | Metric: {metric}
-      </div>
+      </div> */}
 
       {/* Legend */}
       <div className="flex gap-6 text-sm mb-6 items-center relative p-3 bg-gray-50 border border-gray-200 rounded-lg">

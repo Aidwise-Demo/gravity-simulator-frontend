@@ -114,12 +114,11 @@ import React, { useEffect, useState } from 'react';
 interface GaugeChartProps {
   actualValue: number;
   targetValue: number;
-  achievementStatus: string;
   metric: string;
 }
 
 const formatValue = (value: number) => {
-  if (!value || isNaN(value)) return 'NA';
+  if (value === undefined || value === null || isNaN(value)) return 'NA';
   if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
   if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
   return value.toString();
@@ -128,23 +127,40 @@ const formatValue = (value: number) => {
 const GaugeChart: React.FC<GaugeChartProps> = ({
   actualValue,
   targetValue,
-  achievementStatus,
   metric
 }) => {
   const [formattedActual, setFormattedActual] = useState('');
   const [formattedTarget, setFormattedTarget] = useState('');
   const [formattedMax, setFormattedMax] = useState('');
+  const [achievementStatus, setAchievementStatus] = useState('');
+  const [statusColor, setStatusColor] = useState('#ef4444');
 
-  const maxValue = Math.max(actualValue, targetValue) * 2.5;
+  // Ensure we have valid values to work with
+  const safeActual = isNaN(actualValue) || actualValue < 0 ? 0 : actualValue;
+  const safeTarget = isNaN(targetValue) || targetValue <= 0 ? 1 : targetValue;
+  const maxValue = Math.max(safeActual, safeTarget) * 2.5;
 
   useEffect(() => {
-    setFormattedActual(formatValue(actualValue));
-    setFormattedTarget(formatValue(targetValue));
+    setFormattedActual(formatValue(safeActual));
+    setFormattedTarget(formatValue(safeTarget));
     setFormattedMax(formatValue(maxValue));
-  }, [actualValue, targetValue, maxValue]);
+    
+    // Calculate achievement percentage
+    const percentage = (safeActual / safeTarget) * 100;
+    setAchievementStatus(`${Math.round(percentage)}%`);
+    
+    // Set color based on achievement percentage
+    if (percentage >= 100) {
+      setStatusColor('#10b981'); // green
+    } else if (percentage >= 90) {
+      setStatusColor('#f59e0b'); // yellow
+    } else {
+      setStatusColor('#ef4444'); // red
+    }
+  }, [safeActual, safeTarget, maxValue]);
 
   // Calculate angles for the arc
-  const angleFromValue = (value: number) => {
+  const angleFromValue = (value: number): number => {
     const percent = Math.min(value / maxValue, 1);
     return percent * 180; // 0° to 180°
   };
@@ -170,18 +186,18 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
 
   const centerX = 100;
   const centerY = 100;
-  const radius = 80;
+  const radius = 78;
   const strokeWidth = 18;
 
-  const actualAngle = angleFromValue(actualValue);
-  const targetAngle = angleFromValue(targetValue);
+  const actualAngle = angleFromValue(safeActual);
+  const targetAngle = angleFromValue(safeTarget);
   const targetPos = polarToCartesian(centerX, centerY, radius, targetAngle);
 
   return (
-    <div className="flex flex-col items-center">
-      <h3 className="text-md font-medium mb-2">{metric} (in AED)</h3>
+    <div className="flex flex-col items-center border-2 border-gray-200 rounded-lg p-4 shadow-md bg-white">
+      <h3 className="text-lg font-medium mb-2">{metric} (in AED)</h3>
 
-      <svg width="220" height="120" viewBox="0 0 200 120">
+      <svg width="220" height="130" viewBox="0 0 200 130">
         {/* Background Arc */}
         <path
           d={describeArc(centerX, centerY, radius, 0, 180)}
@@ -191,57 +207,66 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           strokeLinecap="round"
         />
         
-        {/* Actual Value Arc */}
+        {/* Actual Value Arc - Color based on achievement percentage */}
         <path
           d={describeArc(centerX, centerY, radius, 0, actualAngle)}
-          stroke="#10b981"
+          stroke={statusColor}
           strokeWidth={strokeWidth}
           fill="none"
           strokeLinecap="round"
         />
         
-        {/* Target Marker */}
+        {/* Target Marker - Improved positioning */}
+        <circle 
+          cx={targetPos.x} 
+          cy={targetPos.y} 
+          r="5" 
+          fill="#3b82f6"
+        />
         <line
           x1={targetPos.x}
           y1={targetPos.y}
           x2={targetPos.x}
-          y2={targetPos.y - 12}
+          y2={targetPos.y - 15}
           stroke="#3b82f6"
-          strokeWidth="3"
+          strokeWidth="2"
+          strokeDasharray="2,1"
         />
-
-        {/* Labels: 0, Target, Max */}
-        <text x="0" y="115" fontSize="10">0M</text>
-        <text x="200" y="115" fontSize="10" textAnchor="end">{formattedMax} (Q4 Target)</text>
         
-        {/* Target Value Label */}
+        {/* Labels: 0, Max */}
+        <text x="20" y="123" fontSize="11" fontWeight="medium">0</text>
+        <text x="180" y="123" fontSize="11" fontWeight="medium" textAnchor="end">{formattedMax}</text>
+        <text x="180" y="108" fontSize="10" fontWeight="normal" textAnchor="end">(Q4 Target)</text>
+        
+        {/* Target Value Label - Better positioned */}
         <text 
           x={targetPos.x} 
-          y={targetPos.y - 15} 
-          fontSize="10" 
+          y={targetPos.y - 18} 
+          fontSize="11" 
           textAnchor="middle" 
           fill="#3b82f6"
+          fontWeight="medium"
         >
           {formattedTarget}
         </text>
 
-        {/* Center Actual */}
-        <text x="100" y="88" textAnchor="middle" fontSize="24" fontWeight="bold">
+        {/* Center Actual with improved styling */}
+        <text x="100" y="92" textAnchor="middle" fontSize="26" fontWeight="bold">
           {formattedActual}
         </text>
       </svg>
 
-      <div className="text-xs mt-1">
-        {metric} Status for March 2025: {achievementStatus} of Target
+      <div className="text-sm font-medium mt-2 text-gray-800">
+        {metric} Status for March 2025: <span style={{color: statusColor}}>{achievementStatus}</span> of Target
       </div>
 
-      <div className="flex flex-col gap-1 mt-2 text-xs">
+      <div className="flex flex-col gap-2 mt-3 text-sm border-t border-gray-200 pt-2 w-full">
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+          <div className="w-4 h-4 rounded-full" style={{backgroundColor: statusColor}}></div>
           <span>Actual Value for March 2025</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-4 h-0.5 bg-blue-500"></div>
+          <div className="w-4 h-4 rounded-full bg-blue-500"></div>
           <span>Target Value for March 2025</span>
         </div>
       </div>
