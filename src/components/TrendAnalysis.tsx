@@ -127,20 +127,22 @@ interface TrendAnalysisProps {
   quarters: string[];
   actualValues: number[];
   targetValues: number[];
+  industryValues?: number[]; // Added industry values as optional prop
 }
 
 const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   title,
   quarters,
   actualValues,
-  targetValues
+  targetValues,
+  industryValues = [] // Default to empty array if not provided
 }) => {
   // Define all quarters till Q4 2025
   const allQuarters = [
     "Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024",
     "Q1 2025", "Q2 2025", "Q3 2025", "Q4 2025"
   ];
-
+  
   // Format value function
   const formatValue = (value) => {
     if (value === null || value === undefined || value === '' || value === 'NA') {
@@ -161,15 +163,22 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
     
     return value;
   };
-
+  
   // Merge your data into the fixed quarters array
   const data = allQuarters.map((quarter) => {
     const idx = quarters.indexOf(quarter);
-    return {
+    const dataPoint: any = {
       quarter,
       actual: idx !== -1 && actualValues[idx] != null ? actualValues[idx] : 0,
-      target: idx !== -1 && targetValues[idx] != null ? targetValues[idx] : 0
+      target: idx !== -1 && targetValues[idx] != null ? targetValues[idx] : 0,
     };
+    
+    // Include industry value if industryValues array is provided, even if values are 0
+    if (industryValues.length > 0) {
+      dataPoint.industry = idx !== -1 && industryValues[idx] != null ? industryValues[idx] : 0;
+    }
+    
+    return dataPoint;
   });
   
   return (
@@ -224,6 +233,18 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
               activeDot={{ r: 6 }}
               name="Target"
             />
+            {/* Only render the industry line if industryValues array exists */}
+            {industryValues.length > 0 && (
+              <Line
+                type="monotone"
+                dataKey="industry"
+                stroke="#000000"  // Black color for industry line
+                strokeWidth={2}
+                dot={{ r: 3 }}
+                activeDot={{ r: 6 }}
+                name="Industry"
+              />
+            )}
           </LineChart>
         </ResponsiveContainer>
       </div>

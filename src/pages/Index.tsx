@@ -14,6 +14,12 @@ import BusinessVerticalRisk from '../components/BusinessVerticalRisk';
 import ScoreSummary from '../components/ScoreSummary';
 import { toast } from '@/components/ui/use-toast';
 
+// Define the interface for business vertical target with change flag
+interface BusinessVerticalTargetWithFlag {
+  value: number;
+  changed: number; // 1 for changed, 0 for unchanged
+}
+
 const Index = () => {
   const [period, setPeriod] = useState<string>("Q1 2025");
   const [benchmark, setBenchmark] = useState<string>("Similar Competitors");
@@ -26,10 +32,9 @@ const Index = () => {
     currentPeriod: string = period,
     currentBenchmark: string = benchmark,
     currentMetric: string = metric,
-    businessVertical?: string,
-    targetValue?: number
+    allBusinessVerticalTargets?: Record<string, BusinessVerticalTargetWithFlag>
   ) => {
-    const isUpdate = businessVertical !== undefined;
+    const isUpdate = allBusinessVerticalTargets !== undefined;
     if (isUpdate) {
       setUpdating(true);
     } else {
@@ -41,8 +46,7 @@ const Index = () => {
         currentPeriod, 
         currentBenchmark, 
         currentMetric,
-        businessVertical,
-        targetValue
+        allBusinessVerticalTargets
       );
       
       // Log the entire data response
@@ -52,8 +56,8 @@ const Index = () => {
       if (result.trendAnalysis.businessVerticals) {
         console.log('Business Vertical Trend Data:', {
           quarters: result.trendAnalysis.businessVerticals.quarters,
-          actual: result.trendAnalysis.businessVerticals.actual,
-          target: result.trendAnalysis.businessVerticals.target
+          actual: result.trendAnalysis.businessVerticals.actualValues,
+          target: result.trendAnalysis.businessVerticals.targetValues
         });
       } else {
         console.warn('No businessVerticals data found in trendAnalysis');
@@ -99,15 +103,13 @@ const Index = () => {
     period: string;
     benchmark: string;
     metric: string;
-    businessVertical: string;
-    targetValue: number;
+    allBusinessVerticalTargets: Record<string, BusinessVerticalTargetWithFlag>;
   }) => {
     await loadData(
       updateParams.period,
       updateParams.benchmark,
       updateParams.metric,
-      updateParams.businessVertical,
-      updateParams.targetValue
+      updateParams.allBusinessVerticalTargets
     );
   };
 
@@ -177,7 +179,7 @@ const Index = () => {
               targetValue={data.summary.targetValue}
               achievementStatus={data.summary.achievementStatus}
               overallValue={data.summary.overallValue}
-               metric={metric}
+              metric={metric}
             />
           </div>
           
@@ -199,6 +201,7 @@ const Index = () => {
                 quarters={data.trendAnalysis.businessVerticals.quarters}
                 actualValues={data.trendAnalysis.businessVerticals.actualValues}
                 targetValues={data.trendAnalysis.businessVerticals.targetValues}
+                industryValues={data.trendAnalysis.businessVerticals.industryValues}
               />
             </div>
           )}

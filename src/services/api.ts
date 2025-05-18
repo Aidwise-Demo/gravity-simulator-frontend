@@ -1,4 +1,3 @@
-
 import axios from 'axios';
 
 const API_URL = 'http://localhost:7000/api/gravity/simulation';
@@ -27,8 +26,9 @@ const mockData = {
     },
     "businessVerticals": {
       "quarters": ["Q1-24", "Q2-24", "Q3-24", "Q4-24", "Q1-25"],
-      "actual": [890, 910, 880, 920, 937],
-      "target": [950, 940, 930, 940, 960]
+      "actualValues": [890, 910, 880, 920, 937],
+      "targetValues": [950, 940, 930, 940, 960],
+      "industryValues": [930, 935, 940, 945, 950]
     }
   },
   "businessVerticalTargets": [
@@ -133,8 +133,9 @@ export interface SimulationData {
     };
     businessVerticals: {
       quarters: string[];
-      actual: number[];
-      target: number[];
+      actualValues: number[];
+      targetValues: number[];
+      industryValues?: number[];
     };
   };
   businessVerticalTargets: Array<{
@@ -149,30 +150,54 @@ export interface SimulationData {
   }>;
 }
 
+// Interface for business vertical target with change flag
+interface BusinessVerticalTargetWithFlag {
+  value: number;
+  changed: number; // 1 for changed, 0 for unchanged
+}
+
 export const fetchSimulationData = async (
   period: string = "Q1 2025", 
   benchmark: string = "Similar Competitors", 
   metric: string = "EBITDA",
-  businessVertical?: string,
-  targetValue?: number
+  allBusinessVerticalTargets?: Record<string, number | BusinessVerticalTargetWithFlag>
 ): Promise<SimulationData> => {
   try {
-    // Build request payload with optional business vertical and target
-    const payload = {
+    // Build request payload
+    const payload: any = {
       company: "Dubai Holdings",
       period,
       industryBenchmark: benchmark,
       metric
     };
     
-    // Add business vertical and target if provided
-    if (businessVertical && targetValue !== undefined) {
-      Object.assign(payload, {
-        businessVertical,
-        targetValue
+    // Add all business vertical targets if provided
+    if (allBusinessVerticalTargets) {
+      // Prepare business verticals with their targets and change flags
+      const businessVerticals = {};
+      const changedVertical = Object.keys(allBusinessVerticalTargets).find(
+        key => typeof allBusinessVerticalTargets[key] === 'object' && 
+        (allBusinessVerticalTargets[key] as BusinessVerticalTargetWithFlag).changed === 1
+      );
+      
+      // Format the business verticals for the API
+      Object.entries(allBusinessVerticalTargets).forEach(([name, targetInfo]) => {
+        if (typeof targetInfo === 'number') {
+          // If it's just a number, determine if it's the changed one based on changedVertical
+          businessVerticals[name] = {
+            value: targetInfo,
+            changed: name === changedVertical ? 1 : 0
+          };
+        } else {
+          // It's already an object with value and changed flag
+          businessVerticals[name] = targetInfo;
+        }
       });
+      
+      Object.assign(payload, { businessVerticals });
     }
     
+    console.log('Sending payload to API:', payload);
     const response = await axios.post(API_URL, payload);
     
     return response.data;
@@ -182,12 +207,9 @@ export const fetchSimulationData = async (
   }
 };
 
-// Format large numbers to millions (M) remains the same...
-
 // New function to handle target change and reload data
 export const handleTargetChange = async (
-  businessVertical: string,
-  newTarget: number,
+  allBusinessVerticalTargets: Record<string, BusinessVerticalTargetWithFlag>,
   currentPeriod: string,
   currentBenchmark: string,
   currentMetric: string,
@@ -198,12 +220,11 @@ export const handleTargetChange = async (
       currentPeriod,
       currentBenchmark,
       currentMetric,
-      businessVertical,
-      newTarget
+      allBusinessVerticalTargets
     );
     
     setData(updatedData);
   } catch (error) {
-    console.error("Failed to update target value", error);
+    console.error("Failed to update target values", error);
   }
 };
