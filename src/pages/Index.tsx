@@ -20,6 +20,7 @@ interface BusinessVerticalTargetWithFlag {
   changed: number; // 1 for changed, 0 for unchanged
 }
 
+
 const Index = () => {
   const [period, setPeriod] = useState<string>("Q1 2025");
   const [benchmark, setBenchmark] = useState<string>("Similar Competitors");
@@ -27,6 +28,19 @@ const Index = () => {
   const [data, setData] = useState<SimulationData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [updating, setUpdating] = useState<boolean>(false);
+ const [isResetting, setIsResetting] = useState(false);
+
+  const handleReset = async () => {
+    setIsResetting(true);
+    try {
+      // Call API to reset simulation (no business verticals passed)
+      await loadData(period, benchmark, metric, undefined);
+    } catch (error) {
+      console.error("Failed to reset targets", error);
+    } finally {
+      setIsResetting(false);
+    }
+  };
 
   const loadData = useCallback(async (
     currentPeriod: string = period,
@@ -164,6 +178,17 @@ const Index = () => {
               options={metricOptions} 
               onChange={handleMetricChange} 
             />
+                <button
+      onClick={handleReset}
+      disabled={isResetting}
+      className="flex items-center text-gray-600 hover:text-blue-600 transition-colors border border-gray-300 rounded px-2 py-1 hover:border-blue-400 ml-2"
+      title="Reset to default values"
+    >
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+      </svg>
+      <span className="ml-1">Reset</span>
+    </button>
           </div>
         </div>
         
