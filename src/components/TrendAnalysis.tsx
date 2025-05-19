@@ -130,6 +130,7 @@ interface TrendAnalysisProps {
   simulatedTargetValues?: number[];
   simulatedActualValues?: number[];
   simulatedIndustryValues?: number[];
+  selectedQuarter?: string;
 
 }
 
@@ -141,7 +142,8 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   industryValues = [],
   simulatedTargetValues = [],
   simulatedActualValues = [],
-  simulatedIndustryValues = []
+  simulatedIndustryValues = [],
+   selectedQuarter
 }) => {
   // Define all quarters till Q4 2025
   const allQuarters = [
@@ -218,6 +220,13 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   }
   return dataPoint;
 });
+ let filteredData = data;
+  if (selectedQuarter) {
+    const selectedIdx = allQuarters.indexOf(selectedQuarter);
+    if (selectedIdx !== -1) {
+      filteredData = data.slice(0, selectedIdx + 1);
+    }
+  }
   
   return (
     <div className="flex flex-col h-full border-2 border-gray-200 rounded-lg shadow-md bg-white overflow-hidden">
@@ -225,7 +234,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
       <div className="flex-1 p-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={data}
+            data={filteredData}
             margin={{ top: 10, right: 10, left: 5, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
@@ -237,6 +246,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
               tickLine={false}
               axisLine={{ stroke: '#e2e8f0' }}
               dy={10}
+              padding={{ right: 20 }}
             />
             <YAxis
               tick={{ fontSize: 10 }}

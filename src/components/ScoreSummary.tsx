@@ -30,10 +30,10 @@ const ScoreSummary = ({ scorePercent, targetsRatio, targetDiff, metric }: ScoreS
 
   return (
     <div className="p-4 rounded-lg text-center border-2 border-gray-300 shadow-md">
-      <h3 className="text-sm font-bold">Overall {metric}</h3>
+      <h3 className="text-sm font-medium ">Overall {metric}</h3>
       <div className="relative mt-2 mb-1">
         <div className="flex items-end justify-center">
-          <div className="text-4xl font-bold">{formattedScore}</div>
+          <div className="text-2xl font-bold">{formattedScore}</div>
           <div className={`ml-1 ${isPositive ? 'bg-green-500' : 'bg-red-500'} rounded p-1 text-white font-medium flex items-center`}>
             <span className="inline mr-1 text-base">
               {isPositive ? '↑' : '↓'}

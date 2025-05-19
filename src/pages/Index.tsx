@@ -219,7 +219,7 @@ const Index = () => {
               targetValues={data.trendAnalysis.overall.targetValues}
               simulatedTargetValues={data.trendAnalysis.overall.simulatedTargetValues}
               simulatedActualValues={data.trendAnalysis.overall.simulatedActualValues}
-             
+             selectedQuarter={period}
 
             />
           </div>
@@ -236,7 +236,7 @@ const Index = () => {
                 simulatedTargetValues={data.trendAnalysis.businessVerticals.simulatedTargetValues}
               simulatedActualValues={data.trendAnalysis.businessVerticals.simulatedActualValues}
               simulatedIndustryValues={data.trendAnalysis.businessVerticals.simulatedIndustryValues}
-
+selectedQuarter={period}
              
               />
             </div>

@@ -822,7 +822,7 @@ const BusinessVerticalRisk = ({
 
           {/* Tooltip */}
           <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
-            <div><strong>Target</strong>: Projected target set for the upcoming period.</div>
+            <div><strong>Target</strong>:  target set for the current period.</div>
             <div><strong>Current</strong>: Actual performance for the current period.</div>
             <div><strong>Current*</strong>: Adjusted or estimated current value.</div>
             <div><strong>Industry Average</strong>: Benchmark average across similar companies.</div>
@@ -870,7 +870,7 @@ const BusinessVerticalRisk = ({
       </svg>
       {/* Tooltip */}
       <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
-        Projected target set for the upcoming quarter.
+        Predefined target set for the selected quarter.
       </div>
     </div>
   </div>
@@ -903,8 +903,8 @@ const BusinessVerticalRisk = ({
       {verticals.map((vertical, idx) => (
         <div key={idx} className={`mb-16 border-x border-b border-gray-200 px-4 py-2 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}>
           <div className="flex justify-between mb-2">
-            <div className="font-medium w-1/4">{vertical.name}</div>
-            <div className="font-medium w-1/5 text-center">
+            <div className="text-sm font-medium  w-1/4">{vertical.name}</div>
+            <div className="text-sm font-medium  w-1/5 text-center">
               {/* Here we still use predictedTarget for the "Predefined Target" column */}
               {formatValue(vertical.predictedTarget)}
             </div>
@@ -945,12 +945,23 @@ const BusinessVerticalRisk = ({
                   document.addEventListener('mouseup', mouseUpHandler);
                 }}
               >
-                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+                {/* <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
                   <div className="bg-pink-600 text-white text-xs px-2 py-1 rounded shadow-sm border border-pink-700">
                     {/* Display predictedNewTarget if available, otherwise use predictedTarget */}
-                    {formatValue(vertical.predictedNewTarget !== undefined ? vertical.predictedNewTarget : vertical.predictedTarget)}
-                  </div>
-                </div>
+                    {/* {formatValue(vertical.predictedNewTarget !== undefined ? vertical.predictedNewTarget : vertical.predictedTarget)} */}
+                  {/* </div> */}
+                {/* </div> */} 
+                <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
+  <div className="bg-pink-600 text-white text-xs px-2 py-1 rounded shadow-sm border border-pink-700">
+    {formatValue(vertical.predictedNewTarget !== undefined ? vertical.predictedNewTarget : vertical.predictedTarget)}
+    {isValidNumber(vertical.target_diff) && (
+      <span className="ml-1">
+        ({vertical.target_diff > 0 ? '+' : ''}
+        {Number(vertical.target_diff).toFixed(0)}%)
+      </span>
+    )}
+  </div>
+</div>
               </div>
 
               {/* All triangle pointers below the bar */}
