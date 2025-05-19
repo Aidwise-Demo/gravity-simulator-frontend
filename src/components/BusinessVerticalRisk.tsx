@@ -599,12 +599,11 @@ const TrianglePointer = ({ value, label, formatFunc, colorClass }) => (
 // Color mapping for triangles
 const POINTER_COLORS = {
   Target: 'text-pink-600',
-  Current: 'text-green-600',
-  'Current*': 'text-yellow-500',
-  'Industry Average': 'text-blue-600',
+  Current: 'text-indigo-500',
+  'Current*': 'text-purple-500',
+  'Industry Average': 'text-cyan-600',
   'cut-off': 'text-gray-500'
 };
-
 const BusinessVerticalRisk = ({
   verticals: initialVerticals,
   period = "Q1 2025",
@@ -769,7 +768,7 @@ const BusinessVerticalRisk = ({
 
   return (
     <div className="w-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
-      <div className="flex justify-start items-center mb-6 gap-x-4">
+      <div className="flex justify-start items-center mb-4 gap-x-4">
         <h2 className="text-blue-600 font-medium text-lg">
           Business Vertical Targets - Risk Assessment & Scenario Analysis
         </h2>
@@ -794,16 +793,22 @@ const BusinessVerticalRisk = ({
       </div> */}
 
       {/* Legend */}
-      <div className="flex gap-6 text-sm mb-6 items-center relative p-3 bg-gray-50 border border-gray-200 rounded-lg">
-        {/* Legend items */}
-        {Object.entries(POINTER_COLORS).map(([label, colorClass], idx) => (
-          <div key={idx} className="flex items-center space-x-2">
-            <svg className={`w-3.5 h-3.5 ${colorClass} fill-current`} viewBox="0 0 24 24">
-              <path d="M12 2L6 14h12z" />
-            </svg>
-            <span>{label}</span>
-          </div>
-        ))}
+<div className="flex gap-6 text-sm mb-5 items-center relative p-3 bg-gray-50 border border-gray-200 rounded-lg">
+  {/* Legend items */}
+ {Object.entries(POINTER_COLORS).map(([label, colorClass], idx) => (
+  <div key={idx} className="flex items-center space-x-2">
+    {label === "Target" ? (
+      // Render a line for Target
+      <div className={`w-1.5 h-6 rounded-full ${colorClass} bg-current`} />
+    ) : (
+      // Render triangle for others
+      <svg className={`w-3.5 h-3.5 ${colorClass} fill-current`} viewBox="0 0 24 24">
+        <path d="M12 2L6 14h12z" />
+      </svg>
+    )}
+    <span>{label}</span>
+  </div>
+))}
 
         {/* Info icon with tooltip */}
         <div className="group relative ml-4 cursor-pointer">
@@ -825,14 +830,75 @@ const BusinessVerticalRisk = ({
           </div>
         </div>
       </div>
+            {/* Help text */}
+      <div className="mb-5 text-sm text-gray-600 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+        <div className="flex items-start">
+          <svg className="w-5 h-5 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
+            <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+          </svg>
+          <span>Drag the pink markers to adjust target values. Changes are automatically saved when you release.</span>
+        </div>
+      </div>
 
       {/* Header */}
-      <div className="flex w-full text-sm font-medium mb-4 px-4 py-2 bg-gray-100 border border-gray-200 rounded-t-lg">
+      {/* <div className="flex w-full text-sm font-medium mb-4 px-4 py-2 bg-gray-100 border border-gray-200 rounded-t-lg">
         <div className="w-1/4">Business Vertical</div>
         <div className="w-1/5 text-center">Predefined Target<br />for Q2 2025</div>
+        
         <div className="w-2/5 text-center">Simulator</div>
         <div className="w-1/5 text-right">Status</div>
+      </div> */}
+      {/* Header */}
+<div className="flex w-full text-sm font-medium mb-5 px-4 py-2 bg-gray-100 border border-gray-200 rounded-t-lg">
+  
+  {/* Business Vertical */}
+  <div className="w-1/4">Business Vertical</div>
+  
+  {/* Predefined Target with Tooltip */}
+  <div className="w-1/5 text-center flex justify-center items-center gap-1">
+    <span>
+      Predefined Target<br />for Q2 2025
+    </span>
+    {/* Info Icon */}
+    <div className="group relative cursor-pointer">
+      <svg
+        className="w-4 h-4 text-gray-500 hover:text-gray-700"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+      </svg>
+      {/* Tooltip */}
+      <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
+        Projected target set for the upcoming quarter.
       </div>
+    </div>
+  </div>
+
+  {/* Simulator */}
+  <div className="w-2/5 text-center">Simulator</div>
+  
+  {/* Status with Tooltip */}
+  <div className="w-1/5 text-right flex justify-end items-center gap-1">
+    <span>Status</span>
+    {/* Info Icon */}
+    <div className="group relative cursor-pointer">
+      <svg
+        className="w-4 h-4 text-gray-500 hover:text-gray-700"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+      </svg>
+      {/* Tooltip */}
+      <div className="absolute right-0 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
+        Current status based on simulated vs. actual target results.
+      </div>
+    </div>
+  </div>
+
+</div>
+
 
       {verticals.map((vertical, idx) => (
         <div key={idx} className={`mb-16 border-x border-b border-gray-200 px-4 py-2 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}>
@@ -937,7 +1003,7 @@ const BusinessVerticalRisk = ({
         </div>
       ))}
 
-      {/* Help text */}
+      {/* Help text
       <div className="mt-4 text-sm text-gray-600 p-3 bg-blue-50 border border-blue-200 rounded-lg">
         <div className="flex items-start">
           <svg className="w-5 h-5 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
@@ -945,7 +1011,7 @@ const BusinessVerticalRisk = ({
           </svg>
           <span>Drag the pink markers to adjust target values. Changes are automatically saved when you release.</span>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

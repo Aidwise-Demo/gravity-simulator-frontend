@@ -84,7 +84,7 @@
 //               wrapperStyle={{ fontSize: '10px', paddingBottom: '10px' }}
 //             />
 //             <Line
-//               type="monotone"
+//               type="linear"
 //               dataKey="actual"
 //               stroke="#3182ce"
 //               strokeWidth={2}
@@ -109,7 +109,6 @@
 // };
 
 // export default TrendAnalysis;
-
 import React from 'react';
 import {
   LineChart,
@@ -127,7 +126,11 @@ interface TrendAnalysisProps {
   quarters: string[];
   actualValues: number[];
   targetValues: number[];
-  industryValues?: number[]; // Added industry values as optional prop
+  industryValues?: number[];
+  simulatedTargetValues?: number[];
+  simulatedActualValues?: number[];
+  simulatedIndustryValues?: number[];
+
 }
 
 const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
@@ -135,7 +138,10 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   quarters,
   actualValues,
   targetValues,
-  industryValues = [] // Default to empty array if not provided
+  industryValues = [],
+  simulatedTargetValues = [],
+  simulatedActualValues = [],
+  simulatedIndustryValues = []
 }) => {
   // Define all quarters till Q4 2025
   const allQuarters = [
@@ -144,51 +150,83 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   ];
   
   // Format value function
-  const formatValue = (value) => {
+  const formatValue = (value: number) => {
     if (value === null || value === undefined || value === '' || value === 'NA') {
       return 'NA';
     }
-    
     if (typeof value === 'number') {
       if (value >= 1000000000) {
-        return (value / 1000000000).toFixed(1) + 'B';
+        return (value / 1000000000).toFixed(0) + 'B';
       } else if (value >= 1000000) {
-        return (value / 1000000).toFixed(1) + 'M';
+        return (value / 1000000).toFixed(0) + 'M';
       } else if (value >= 1000) {
-        return (value / 1000).toFixed(1) + 'K';
+        return (value / 1000).toFixed(0) + 'K';
       } else {
-        return value.toFixed(1);
+        return value.toFixed(0);
       }
     }
-    
     return value;
   };
   
   // Merge your data into the fixed quarters array
   const data = allQuarters.map((quarter) => {
-    const idx = quarters.indexOf(quarter);
-    const dataPoint: any = {
-      quarter,
-      actual: idx !== -1 && actualValues[idx] != null ? actualValues[idx] : 0,
-      target: idx !== -1 && targetValues[idx] != null ? targetValues[idx] : 0,
-    };
-    
-    // Include industry value if industryValues array is provided, even if values are 0
-    if (industryValues.length > 0) {
-      dataPoint.industry = idx !== -1 && industryValues[idx] != null ? industryValues[idx] : 0;
-    }
-    
-    return dataPoint;
-  });
+  const idx = quarters.indexOf(quarter);
+  const dataPoint: any = {
+    quarter,
+    actual: idx !== -1 && actualValues[idx] != null ? actualValues[idx] : 0,
+    target: idx !== -1 && targetValues[idx] != null ? targetValues[idx] : 0,
+  };
+  if (industryValues.length > 0) {
+    dataPoint.industry = idx !== -1 && industryValues[idx] != null ? industryValues[idx] : 0;
+  }
+  // Only show simulatedActual for Q1 2025 and Q2 2025
+  if (
+    simulatedActualValues.length > 0 &&
+    (quarter === "Q1 2025" || quarter === "Q2 2025")
+  ) {
+    dataPoint.simulatedActual =
+      idx !== -1 && simulatedActualValues[idx] != null
+        ? simulatedActualValues[idx]
+        : null;
+  } else {
+    dataPoint.simulatedActual = null;
+  }
+  // Only show simulatedTarget for Q1 2025 and Q2 2025
+  if (
+    simulatedTargetValues.length > 0 &&
+    (quarter === "Q1 2025" || quarter === "Q2 2025")
+  ) {
+    dataPoint.simulatedTarget =
+      idx !== -1 && simulatedTargetValues[idx] != null
+        ? simulatedTargetValues[idx]
+        : null;
+  } else {
+    dataPoint.simulatedTarget = null;
+  }
+  // Only show simulatedIndustry for Q1 2025 and Q2 2025
+  if (
+    simulatedIndustryValues &&
+    simulatedIndustryValues.length > 0 &&
+    (quarter === "Q1 2025" || quarter === "Q2 2025")
+  ) {
+    dataPoint.simulatedIndustry =
+      idx !== -1 && simulatedIndustryValues[idx] != null
+        ? simulatedIndustryValues[idx]
+        : null;
+  } else {
+    dataPoint.simulatedIndustry = null;
+  }
+  return dataPoint;
+});
   
   return (
-    <div className="flex flex-col h-full">
-      <h3 className="mb-2 text-sm font-medium">{title}</h3>
-      <div className="flex-1 min-h-180">
+    <div className="flex flex-col h-full border-2 border-gray-200 rounded-lg shadow-md bg-white overflow-hidden">
+      <h3 className="px-4 py-3 text-sm font-medium bg-gray-50 border-b">{title}</h3>
+      <div className="flex-1 p-4">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
             data={data}
-            margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+            margin={{ top: 10, right: 10, left: 5, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
             <XAxis
@@ -197,54 +235,101 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
               interval={0}
               tick={{ fontSize: 10 }}
               tickLine={false}
+              axisLine={{ stroke: '#e2e8f0' }}
+              dy={10}
             />
             <YAxis
               tick={{ fontSize: 10 }}
               tickLine={false}
-              width={25}
+              width={30}
+              axisLine={{ stroke: '#e2e8f0' }}
               tickFormatter={formatValue}
             />
             <Tooltip 
-              formatter={(value, name) => [formatValue(value), name]}
+              formatter={(value, name) => [formatValue(value as number), name]}
               labelFormatter={(label) => `Quarter: ${label}`}
+              contentStyle={{ 
+                borderRadius: '4px', 
+                border: '1px solid #e2e8f0',
+                boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
+              }}
             />
             <Legend
               align="right"
               verticalAlign="top"
               iconType="circle"
               iconSize={8}
-              wrapperStyle={{ fontSize: '10px', paddingBottom: '10px' }}
+              wrapperStyle={{ 
+                fontSize: '9px', 
+                paddingBottom: '5px',
+                paddingTop: '5px'
+              }}
             />
-            <Line
-              type="monotone"
-              dataKey="actual"
-              stroke="#3182ce"
-              strokeWidth={2}
-              dot={{ r: 3 }}
-              activeDot={{ r: 6 }}
-              name="Actual"
-            />
-            <Line
-              type="monotone"
-              dataKey="target"
-              stroke="#9e38a1"
-              strokeWidth={2}
-              dot={{ r: 3 }}
-              activeDot={{ r: 6 }}
-              name="Target"
-            />
-            {/* Only render the industry line if industryValues array exists */}
-            {industryValues.length > 0 && (
-              <Line
-                type="monotone"
-                dataKey="industry"
-                stroke="#000000"  // Black color for industry line
-                strokeWidth={2}
-                dot={{ r: 3 }}
-                activeDot={{ r: 6 }}
-                name="Industry"
-              />
-            )}
+         <Line
+  type="linear"
+  dataKey="actual"
+  stroke="#3182ce"
+  strokeWidth={2}
+  dot={{ r: 3, strokeWidth: 1, fill: '#fff' }}
+  activeDot={{ r: 6 }}
+  name="Actual"
+/>
+<Line
+  type="linear"
+  dataKey="target"
+  stroke="#9e38a1"
+  strokeWidth={2}
+  dot={{ r: 3, strokeWidth: 1, fill: '#fff' }}
+  activeDot={{ r: 6 }}
+  name="Target"
+/>
+{industryValues.length > 0 && (
+  <Line
+    type="linear"
+    dataKey="industry"
+    stroke="#64748b"
+    strokeWidth={2}
+    dot={{ r: 3, strokeWidth: 1, fill: '#fff' }}
+    activeDot={{ r: 6 }}
+    name="Industry Average"
+  />
+)}
+{simulatedActualValues.length > 0 && (
+  <Line
+    type="linear"
+    dataKey="simulatedActual"
+    stroke="#06b6d4"
+    strokeDasharray="5 3"
+    strokeWidth={2}
+    dot={{ r: 3, strokeWidth: 1, fill: '#06b6d4' }}
+    activeDot={{ r: 6 }}
+    name="Projected Actual"
+  />
+)}
+{simulatedTargetValues.length > 0 && (
+  <Line
+    type="linear"
+    dataKey="simulatedTarget"
+    stroke="#a855f7"
+    strokeDasharray="5 3"
+    strokeWidth={2}
+    dot={{ r: 3, strokeWidth: 1, fill: '#a855f7' }}
+    activeDot={{ r: 6 }}
+    name="Simulated Target"
+  />
+)}
+{simulatedIndustryValues && simulatedIndustryValues.length > 0 && (
+  <Line
+    type="linear"
+    dataKey="simulatedIndustry"
+    stroke="#6366f1"
+    strokeDasharray="5 3"
+    strokeWidth={2}
+    dot={{ r: 3, strokeWidth: 1, fill: '#6366f1' }}
+    activeDot={{ r: 6 }}
+    name="Projected Industry"
+  />
+)}
           </LineChart>
         </ResponsiveContainer>
       </div>

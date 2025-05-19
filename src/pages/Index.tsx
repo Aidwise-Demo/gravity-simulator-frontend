@@ -179,6 +179,8 @@ const Index = () => {
               targetValue={data.summary.targetValue}
               achievementStatus={data.summary.achievementStatus}
               overallValue={data.summary.overallValue}
+              newTarget={data.summary.newTarget}
+              period={period}
               metric={metric}
             />
           </div>
@@ -190,6 +192,10 @@ const Index = () => {
               quarters={data.trendAnalysis.overall.quarters}
               actualValues={data.trendAnalysis.overall.actualValues}
               targetValues={data.trendAnalysis.overall.targetValues}
+              simulatedTargetValues={data.trendAnalysis.overall.simulatedTargetValues}
+              simulatedActualValues={data.trendAnalysis.overall.simulatedActualValues}
+             
+
             />
           </div>
           
@@ -202,6 +208,11 @@ const Index = () => {
                 actualValues={data.trendAnalysis.businessVerticals.actualValues}
                 targetValues={data.trendAnalysis.businessVerticals.targetValues}
                 industryValues={data.trendAnalysis.businessVerticals.industryValues}
+                simulatedTargetValues={data.trendAnalysis.businessVerticals.simulatedTargetValues}
+              simulatedActualValues={data.trendAnalysis.businessVerticals.simulatedActualValues}
+              simulatedIndustryValues={data.trendAnalysis.businessVerticals.simulatedIndustryValues}
+
+             
               />
             </div>
           )}
@@ -226,6 +237,7 @@ const Index = () => {
               scorePercent={data.overallScore.scorePercent}
               targetsRatio={data.overallScore.targetsRatio}
               targetDiff={data.overallScore.targetDiff}
+              metric={metric}
             />
           </div>
         </div>

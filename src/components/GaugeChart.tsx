@@ -114,7 +114,10 @@ import React, { useEffect, useState } from 'react';
 interface GaugeChartProps {
   actualValue: number;
   targetValue: number;
+  overallValue: number;
+  newTarget: number;
   metric: string;
+  period: string;
 }
 
 const formatValue = (value: number) => {
@@ -127,10 +130,14 @@ const formatValue = (value: number) => {
 const GaugeChart: React.FC<GaugeChartProps> = ({
   actualValue,
   targetValue,
-  metric
+  overallValue,
+  newTarget,
+  metric,
+  period
 }) => {
   const [formattedActual, setFormattedActual] = useState('');
   const [formattedTarget, setFormattedTarget] = useState('');
+  const [formattedNewTarget, setFormattedNewTarget] = useState('');
   const [formattedMax, setFormattedMax] = useState('');
   const [achievementStatus, setAchievementStatus] = useState('');
   const [statusColor, setStatusColor] = useState('#ef4444');
@@ -138,11 +145,14 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   // Ensure we have valid values to work with
   const safeActual = isNaN(actualValue) || actualValue < 0 ? 0 : actualValue;
   const safeTarget = isNaN(targetValue) || targetValue <= 0 ? 1 : targetValue;
-  const maxValue = Math.max(safeActual, safeTarget) * 2.5;
+  const safeNewTarget = isNaN(newTarget) || newTarget <= 0 ? 1 : newTarget;
+  const safeOverall = isNaN(overallValue) || overallValue <= 0 ? 1 : overallValue;
+  const maxValue = Math.max(safeActual, safeTarget, safeOverall);
 
   useEffect(() => {
     setFormattedActual(formatValue(safeActual));
     setFormattedTarget(formatValue(safeTarget));
+    setFormattedNewTarget(formatValue(safeNewTarget));
     setFormattedMax(formatValue(maxValue));
     
     // Calculate achievement percentage
@@ -157,7 +167,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
     } else {
       setStatusColor('#ef4444'); // red
     }
-  }, [safeActual, safeTarget, maxValue]);
+  }, [safeActual, safeTarget, safeNewTarget, maxValue]);
 
   // Calculate angles for the arc
   const angleFromValue = (value: number): number => {
@@ -183,18 +193,42 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
       "A", r, r, 0, largeArcFlag, 0, end.x, end.y
     ].join(" ");
   };
+const getPreviousQuarter = (period: string) => {
+  // Example input: "Q2 2025"
+  const match = period.match(/Q([1-4]) (\d{4})/);
+  if (!match) return period;
+  let quarter = parseInt(match[1], 10);
+  let year = parseInt(match[2], 10);
+
+  if (quarter === 1) {
+    quarter = 4;
+    year -= 1;
+  } else {
+    quarter -= 1;
+  }
+  return `Q${quarter} ${year}`;
+};
 
   const centerX = 100;
   const centerY = 100;
   const radius = 78;
   const strokeWidth = 18;
+  const simulatedAchievement = (safeActual / safeNewTarget) * 100;
+const simulatedArrowUp = simulatedAchievement >= 100;
+const simulatedArrowColor = simulatedArrowUp ? "#10b981" : "#ef4444";
+const simulatedAchievementStatus = `${Math.round(simulatedAchievement)}%`;
+
 
   const actualAngle = angleFromValue(safeActual);
   const targetAngle = angleFromValue(safeTarget);
+  const newTargetAngle = angleFromValue(safeNewTarget);
+  
   const targetPos = polarToCartesian(centerX, centerY, radius, targetAngle);
+  const newTargetPos = polarToCartesian(centerX, centerY, radius, newTargetAngle);
 
   return (
-    <div className="flex flex-col items-center border-2 border-gray-200 rounded-lg p-4 shadow-md bg-white">
+    <div className="flex flex-col items-center border-2 border-gray-200 rounded-lg p-4 shadow-md bg-white"
+      >
       <h3 className="text-lg font-medium mb-2">{metric} (in AED)</h3>
 
       <svg width="220" height="130" viewBox="0 0 200 130">
@@ -216,7 +250,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           strokeLinecap="round"
         />
         
-        {/* Target Marker - Improved positioning */}
+        {/* Target Marker */}
         <circle 
           cx={targetPos.x} 
           cy={targetPos.y} 
@@ -233,12 +267,29 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           strokeDasharray="2,1"
         />
         
+        {/* New Target Marker - Added with a different color and style */}
+        <circle 
+          cx={newTargetPos.x} 
+          cy={newTargetPos.y} 
+          r="5" 
+          fill="#8b5cf6" // Purple color for new target
+        />
+        <line
+          x1={newTargetPos.x}
+          y1={newTargetPos.y}
+          x2={newTargetPos.x}
+          y2={newTargetPos.y - 15}
+          stroke="#8b5cf6"
+          strokeWidth="2"
+          strokeDasharray="4,2" // Different dash pattern
+        />
+        
         {/* Labels: 0, Max */}
         <text x="20" y="123" fontSize="11" fontWeight="medium">0</text>
         <text x="180" y="123" fontSize="11" fontWeight="medium" textAnchor="end">{formattedMax}</text>
         <text x="180" y="108" fontSize="10" fontWeight="normal" textAnchor="end">(Q4 Target)</text>
         
-        {/* Target Value Label - Better positioned */}
+        {/* Target Value Label */}
         <text 
           x={targetPos.x} 
           y={targetPos.y - 18} 
@@ -250,24 +301,61 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           {formattedTarget}
         </text>
 
+        {/* New Target Value Label */}
+        <text 
+          x={newTargetPos.x} 
+          y={newTargetPos.y - 18} 
+          fontSize="11" 
+          textAnchor="middle" 
+          fill="#8b5cf6"
+          fontWeight="medium"
+        >
+          {formattedNewTarget}
+        </text>
+
         {/* Center Actual with improved styling */}
         <text x="100" y="92" textAnchor="middle" fontSize="26" fontWeight="bold">
           {formattedActual}
         </text>
       </svg>
 
-      <div className="text-sm font-medium mt-2 text-gray-800">
-        {metric} Status for March 2025: <span style={{color: statusColor}}>{achievementStatus}</span> of Target
-      </div>
-
+      {/* <div className="text-sm font-medium mt-2 text-gray-800">
+        Vs Predefined Target: <span style={{color: statusColor}}>{achievementStatus}</span> 
+      </div> */}
+      <div className="text-sm font-medium mt-2 text-gray-800 flex items-center gap-2">
+  Vs Predefined Target: 
+  <span style={{color: statusColor}} className="flex items-center gap-1">
+    {achievementStatus}
+    {safeActual >= safeTarget ? (
+      <span style={{color: "#10b981"}}>&uarr;</span>
+    ) : (
+      <span style={{color: "#ef4444"}}>&darr;</span>
+    )}
+  </span>
+</div>
+<div className="text-sm font-medium mt-1 text-gray-800 flex items-center gap-2">
+  Vs Simulated Target: 
+  <span style={{color: simulatedArrowColor}} className="flex items-center gap-1">
+    {simulatedAchievementStatus}
+    {simulatedArrowUp ? (
+      <span style={{color: "#10b981"}}>&uarr;</span>
+    ) : (
+      <span style={{color: "#ef4444"}}>&darr;</span>
+    )}
+  </span>
+</div>
       <div className="flex flex-col gap-2 mt-3 text-sm border-t border-gray-200 pt-2 w-full">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full" style={{backgroundColor: statusColor}}></div>
-          <span>Actual Value for March 2025</span>
+          <span>Actual {metric} for {getPreviousQuarter(period)}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-          <span>Target Value for March 2025</span>
+          <span>Target {metric} for {period}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 rounded-full bg-purple-500"></div>
+          <span>Simulated Target {metric}</span>
         </div>
       </div>
     </div>
