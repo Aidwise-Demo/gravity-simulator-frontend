@@ -327,7 +327,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
     strokeWidth={2}
     dot={{ r: 3, strokeWidth: 1, fill: '#6366f1' }}
     activeDot={{ r: 6 }}
-    name="Projected Industry"
+    name="Projected Industry Average"
   />
 )}
           </LineChart>

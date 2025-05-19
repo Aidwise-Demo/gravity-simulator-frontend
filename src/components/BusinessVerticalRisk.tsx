@@ -857,7 +857,7 @@ const BusinessVerticalRisk = ({
   {/* Predefined Target with Tooltip */}
   <div className="w-1/5 text-center flex justify-center items-center gap-1">
     <span>
-      Predefined Target<br />for Q2 2025
+      Predefined Target<br />for {period}
     </span>
     {/* Info Icon */}
     <div className="group relative cursor-pointer">
