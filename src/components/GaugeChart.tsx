@@ -162,7 +162,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
     setFormattedMax(formatValue(maxValue));
     
     // Calculate achievement percentage
-    const percentage = (safeActual / safeTarget) * 100;
+    const percentage = ((safeTarget-safeActual) / safeTarget) * 100;
     setAchievementStatus(`${Math.round(percentage)}%`);
     
     // Set color based on achievement percentage
@@ -204,7 +204,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   const centerY = 100;
   const radius = 78;
   const strokeWidth = 18;
-  const simulatedAchievement = (safeActual / safeNewTarget) * 100;
+  const simulatedAchievement = ((safeNewTarget-safeActual) / safeNewTarget) * 100;
   const simulatedArrowUp = simulatedAchievement >= 100;
   const simulatedArrowColor = simulatedArrowUp ? "#10b981" : "#ef4444";
   const simulatedAchievementStatus = `${Math.round(simulatedAchievement)}%`;

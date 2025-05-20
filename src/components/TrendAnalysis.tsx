@@ -131,6 +131,7 @@ interface TrendAnalysisProps {
   simulatedActualValues?: number[];
   simulatedIndustryValues?: number[];
   selectedQuarter?: string;
+  metric: string;
 
 }
 
@@ -143,7 +144,8 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   simulatedTargetValues = [],
   simulatedActualValues = [],
   simulatedIndustryValues = [],
-   selectedQuarter
+   selectedQuarter,
+   metric
 }) => {
   // Define all quarters till Q4 2025
   const allQuarters = [
@@ -241,29 +243,31 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
     <div className="flex flex-col h-full  overflow-hidden">
       <h3 className="px-4 py-3 text-sm font-medium bg-gray-50 ">{title}</h3>
       <div className="flex-1 p-4 ">
-        <ResponsiveContainer width={430} height={260}>
+        <ResponsiveContainer width={400} height={260}>
           <LineChart
             data={filteredData}
             margin={{ top: 10, right: 10, left: 5, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
-            <XAxis
-              dataKey="quarter"
-              type="category"
-              interval={0}
-              tick={{ fontSize: 10 }}
-              tickLine={false}
-              axisLine={{ stroke: '#e2e8f0' }}
-              dy={10}
-              padding={{ right: 20 }}
-            />
-            <YAxis
-              tick={{ fontSize: 10 }}
-              tickLine={false}
-              width={30}
-              axisLine={{ stroke: '#e2e8f0' }}
-              tickFormatter={formatValue}
-            />
+<XAxis
+  dataKey="quarter"
+  type="category"
+  interval={0}
+  tick={{ fontSize: 10 }}
+  tickLine={false}
+  axisLine={{ stroke: '#e2e8f0' }}
+  dy={10}
+  padding={{ right: 20 }}
+  label={{ value: "Quarter", position: "insideBottom", offset: -5, fontSize: 10,dy:10 }}
+/>
+<YAxis
+  tick={{ fontSize: 10 }}
+  tickLine={false}
+  width={50}
+  axisLine={{ stroke: '#e2e8f0' }}
+  tickFormatter={formatValue}
+  label={{ value: metric, angle: -90, position: "insideLeft", fontSize: 10, dx: -2 }}
+/>
             <Tooltip 
               formatter={(value, name) => [formatValue(value as number), name]}
               labelFormatter={(label) => `Quarter: ${label}`}
@@ -317,7 +321,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   <Line
     type="linear"
     dataKey="simulatedActual"
-    stroke="#06b6d4"
+    stroke="#3182ce"
     strokeDasharray="5 3"
     strokeWidth={2}
     dot={{ r: 3, strokeWidth: 1, fill: '#06b6d4' }}
@@ -329,7 +333,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   <Line
     type="linear"
     dataKey="simulatedTarget"
-    stroke="#a855f7"
+    stroke="#9e38a1"
     strokeDasharray="5 3"
     strokeWidth={2}
     dot={{ r: 3, strokeWidth: 1, fill: '#a855f7' }}
@@ -341,7 +345,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   <Line
     type="linear"
     dataKey="simulatedIndustry"
-    stroke="#6366f1"
+    stroke="#64748b"
     strokeDasharray="5 3"
     strokeWidth={2}
     dot={{ r: 3, strokeWidth: 1, fill: '#6366f1' }}

@@ -252,6 +252,7 @@ const Index = () => {
       simulatedTargetValues={data.trendAnalysis.overall.simulatedTargetValues}
       simulatedActualValues={data.trendAnalysis.overall.simulatedActualValues}
       selectedQuarter={period}
+      metric={metric}
     />
   </div>
   {/* Trend Chart 2 (1/3 width) */}
@@ -267,6 +268,7 @@ const Index = () => {
         simulatedActualValues={data.trendAnalysis.businessVerticals.simulatedActualValues}
         simulatedIndustryValues={data.trendAnalysis.businessVerticals.simulatedIndustryValues}
         selectedQuarter={period}
+        metric={metric}
       />
     )}
   </div>
