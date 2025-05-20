@@ -173,13 +173,22 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   // Merge your data into the fixed quarters array
   const data = allQuarters.map((quarter) => {
   const idx = quarters.indexOf(quarter);
+  const isQ22025 = quarter === "Q2 2025";
   const dataPoint: any = {
     quarter,
-    actual: idx !== -1 && actualValues[idx] != null ? actualValues[idx] : null,
+    actual: isQ22025
+      ? null
+      : idx !== -1 && actualValues[idx] != null
+      ? actualValues[idx]
+      : null,
     target: idx !== -1 && targetValues[idx] != null ? targetValues[idx] : 0,
   };
   if (industryValues.length > 0) {
-    dataPoint.industry = idx !== -1 && industryValues[idx] != null ? industryValues[idx] : 0;
+    dataPoint.industry = isQ22025
+      ? null
+      : idx !== -1 && industryValues[idx] != null
+      ? industryValues[idx]
+      : null;
   }
   // Only show simulatedActual for Q1 2025 and Q2 2025
   if (
