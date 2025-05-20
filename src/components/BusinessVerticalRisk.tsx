@@ -875,7 +875,7 @@ const BusinessVerticalRisk = ({
         <div className="w-2/5 text-center">Simulator</div>
         {/* Status with Tooltip */}
          <div className="w-1/5 text-center">    <span>
-            Realistic EBITDA <br />Estimate
+            Realistic {metric} <br />Estimate
           </span></div>
         <div className="w-1/5 text-right flex justify-end items-center gap-1">
           <span>Status</span>
