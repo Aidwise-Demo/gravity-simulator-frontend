@@ -345,7 +345,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
                 strokeWidth={2}
                 dot={{ r: 3, strokeWidth: 1, fill: '#06b6d4' }}
                 activeDot={{ r: 6 }}
-                name="Projected Actual"
+                name="Business Potential"
               />
             )}
             {simulatedTargetValues.length > 0 && (
