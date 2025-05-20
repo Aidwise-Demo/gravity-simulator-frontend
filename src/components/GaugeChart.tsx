@@ -121,7 +121,8 @@ interface GaugeChartProps {
   title: string;
   periodLabel: string;
   showSimulatedTarget?: boolean; 
-  previuos_quarter_actual:number// <-- Add this prop
+  previuos_quarter_actual:number,
+  previuos_quarter_target:number// <-- Add this prop
 }
 
 const formatValue = (value: number) => {
@@ -130,6 +131,23 @@ const formatValue = (value: number) => {
   if (value >= 1e6) return (value / 1e6).toFixed(2) + 'M';
   return value.toString();
 };
+function getPreviousQuarter(quarterStr: string) {
+  // Example input: "Q2 2025"
+  const match = quarterStr.match(/Q([1-4]) (\d{4})/);
+  if (!match) return quarterStr;
+  let q = parseInt(match[1], 10);
+  let year = parseInt(match[2], 10);
+  if (q === 1) {
+    q = 4;
+    year -= 1;
+  } else {
+    q -= 1;
+  }
+  return `Q${q} ${year}`;
+}
+
+// Inside your GaugeChart component:
+
 
 const GaugeChart: React.FC<GaugeChartProps> = ({
   actualValue,
@@ -141,7 +159,8 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   title,
   periodLabel,
   showSimulatedTarget = true,
-  previuos_quarter_actual // default to true
+  previuos_quarter_actual,
+  previuos_quarter_target // default to true
 }) => {
   const [formattedActual, setFormattedActual] = useState('');
   const [formattedTarget, setFormattedTarget] = useState('');
@@ -149,7 +168,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   const [formattedMax, setFormattedMax] = useState('');
   const [achievementStatus, setAchievementStatus] = useState('');
   const [statusColor, setStatusColor] = useState('#ef4444');
-
+const previousQuarterLabel = getPreviousQuarter(period);
   // Ensure we have valid values to work with
   const safeActual = isNaN(actualValue) || actualValue < 0 ? 0 : actualValue;
   const safeTarget = isNaN(targetValue) || targetValue <= 0 ? 1 : targetValue;
@@ -158,6 +177,8 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   const maxValue = Math.max(safeActual, safeTarget, safeOverall);
   const safe_previuos_quarter_actual = isNaN(previuos_quarter_actual) || previuos_quarter_actual <= 0 ? 1 : previuos_quarter_actual;
   const QoQ_growth=((safeActual - safe_previuos_quarter_actual)/safe_previuos_quarter_actual)*100;
+    const safe_previuos_quarter_target = isNaN(previuos_quarter_target) || previuos_quarter_target <= 0 ? 1 : previuos_quarter_target;
+  const QoQ_growth_target=((safeActual - safe_previuos_quarter_target)/safe_previuos_quarter_target)*100;
   
 
   useEffect(() => {
@@ -317,65 +338,93 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
         <text x="100" y="92" textAnchor="middle" fontSize="26" fontWeight="bold">
           {formattedActual}
         </text>
-                <text x="100" y="105" textAnchor="middle" fontSize="9" >
-          Realistic {metric} Estimate
-        </text>
+             <text x="100" y="108" textAnchor="middle" fontSize="9">
+  <tspan>
+    Realistic {metric} Estimate
+  </tspan>
+  <tspan>
+    {/* Info icon with tooltip */}
+    <tspan
+      dx="6"
+      style={{ cursor: 'pointer' }}
+    >
+      <title>
+        It is the sum of minimum of execution adjusted forecast and simulated target across all verticals
+      </title>
+      &#9432;
+    </tspan>
+  </tspan>
+</text>
       </svg>
 
-      <div className="text-sm font-medium mt-2 text-gray-800 flex items-center gap-2">
-        vs Predefined Target: 
-        <span style={{color: statusColor}} className="flex items-center gap-1">
-          {achievementStatus}
-          {safeActual >= safeTarget ? (
-            <span style={{color: "#10b981"}}>&uarr;</span>
-          ) : (
-            <span style={{color: "#ef4444"}}>&darr;</span>
-          )}
-        </span>
-      </div>
-{showSimulatedTarget ? (
-  <div className="text-sm font-medium mt-1 text-gray-800 flex items-center gap-2 min-h-[24px]">
-    vs Simulated Target: 
-    <span style={{color: simulatedArrowColor}} className="flex items-center gap-1">
-      {simulatedAchievementStatus}
-      {simulatedArrowUp ? (
+<div className="grid grid-cols-2 gap-x-6 gap-y-2 mt-4 w-full max-w-md">
+  {/* Left column */}
+  <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
+    vs Predefined Target: 
+    <span style={{color: statusColor}} className="flex items-center gap-1">
+      {achievementStatus}
+      {safeActual >= safeTarget ? (
         <span style={{color: "#10b981"}}>&uarr;</span>
       ) : (
         <span style={{color: "#ef4444"}}>&darr;</span>
       )}
     </span>
   </div>
-) : (
-  // Placeholder to keep alignment
-  <div className="mt-1 min-h-[24px]">&nbsp;</div>
-)}
-      <div className="text-sm font-medium mt-2 text-gray-800 flex items-center gap-2">
-        QoQ Growth: 
-        <span style={{ color: QoQ_growth > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
-          {QoQ_growth.toFixed(2)}%
-          {QoQ_growth>0 ? (
-            <span style={{color: "#10b981"}}>&uarr;</span>
-          ) : (
-            <span style={{color: "#ef4444"}}>&darr;</span>
-          )}
-        </span>
-      </div>
-      <div className="flex flex-col gap-2 mt-3 text-sm  w-full">
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full" style={{backgroundColor: statusColor}}></div>
-          <span>Actual {metric} for {periodLabel}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-          <span>Target {metric} for {periodLabel}</span>
-        </div>
-        {showSimulatedTarget && (
-          <div className="flex items-center gap-2">
-            <div className="w-4 h-4 rounded-full bg-purple-500"></div>
-            <span>Simulated Target {metric}</span>
-          </div>
+  <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
+    vs {previousQuarterLabel} Actual: 
+    <span style={{ color: QoQ_growth > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
+      {QoQ_growth.toFixed(2)}%
+      {QoQ_growth>0 ? (
+        <span style={{color: "#10b981"}}>&uarr;</span>
+      ) : (
+        <span style={{color: "#ef4444"}}>&darr;</span>
+      )}
+    </span>
+  </div>
+  {/* Right column */}
+  {showSimulatedTarget ? (
+    <div className="text-sm font-medium text-gray-800 flex items-center gap-2 min-h-[24px]">
+      vs Simulated Target: 
+      <span style={{color: simulatedArrowColor}} className="flex items-center gap-1">
+        {simulatedAchievementStatus}
+        {simulatedArrowUp ? (
+          <span style={{color: "#10b981"}}>&uarr;</span>
+        ) : (
+          <span style={{color: "#ef4444"}}>&darr;</span>
         )}
-      </div>
+      </span>
+    </div>
+  ) : (
+    <div className="min-h-[24px]">&nbsp;</div>
+  )}
+  <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
+    vs {previousQuarterLabel} Target: 
+    <span style={{ color: QoQ_growth_target > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
+      {QoQ_growth_target.toFixed(2)}%
+      {QoQ_growth_target>0 ? (
+        <span style={{color: "#10b981"}}>&uarr;</span>
+      ) : (
+        <span style={{color: "#ef4444"}}>&darr;</span>
+      )}
+    </span>
+  </div>
+</div>
+<div className="grid grid-cols-2 gap-x-6 gap-y-2 mt-4 text-xs w-full max-w-md">
+  <div className="flex items-center gap-1">
+    <div className="w-2.5 h-2.5 rounded-full" style={{backgroundColor: statusColor}}></div>
+    <span>Actual {metric} for {periodLabel}</span>
+  </div>
+  <div className="flex items-center gap-1">
+    <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+    <span>Target {metric} for {periodLabel}</span>
+  </div>
+  {showSimulatedTarget && (
+    <div className="flex items-center gap-1">
+      <div className="w-2.5 h-2.5 rounded-full bg-purple-500"></div>
+      <span>Simulated Target {metric}</span>
+    </div>
+  )}
+</div>
     </div>
   );
 };

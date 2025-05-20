@@ -532,6 +532,7 @@ const Index = () => {
         periodLabel={period}
         showSimulatedTarget={true}
         previuos_quarter_actual={data.summary.actualValue}
+        previuos_quarter_target={data.summary.targetValue}
       />
     </div>
     {/* Gauge Chart 2: Previous Period */}
