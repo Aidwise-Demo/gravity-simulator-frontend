@@ -822,10 +822,16 @@ const BusinessVerticalRisk = ({
 
           {/* Tooltip */}
           <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
-            <div><strong>Target</strong>:  target set for the current period.</div>
-            <div><strong>Current</strong>: Actual performance for the current period.</div>
-            <div><strong>Current*</strong>: Adjusted or estimated current value.</div>
-            <div><strong>Industry Average</strong>: Benchmark average across similar companies.</div>
+            <div><strong>Target</strong>:  Target for Selected Period</div>
+            <div><strong>Current</strong>: Projected Value for Selected Period</div>
+            <div><strong>Current*</strong>: Adjusted Projected Value for the Selected Period (based on Ongoing Initiatives):
+1 + (0.25 + factor) × factor_based_on_time_left × (0.25 + total_initiative_score)
+Where:
+
+factor: Proportion of initiatives that are currently on track
+factor_based_on_time_left: Proportion of time remaining in the current year
+total_initiative_score: Normalized value representing the number of ongoing initiatives, calculated as the number of initiatives for the business vertical divided by the maximum number of initiatives</div>
+            <div><strong>Industry Average</strong>: Projected Benchmark average across similar companies.</div>
             <div><strong>Cut-off</strong>: Maximum allowed threshold or upper bound for simulation.</div>
           </div>
         </div>
@@ -836,7 +842,7 @@ const BusinessVerticalRisk = ({
           <svg className="w-5 h-5 text-blue-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
           </svg>
-          <span>Drag the pink markers to adjust target values. Changes are automatically saved when you release.</span>
+          <span>Drag the pink markers to adjust target values.</span>
         </div>
       </div>
 
@@ -956,8 +962,8 @@ const BusinessVerticalRisk = ({
     {formatValue(vertical.predictedNewTarget !== undefined ? vertical.predictedNewTarget : vertical.predictedTarget)}
     {isValidNumber(vertical.target_diff) && (
       <span className="ml-1">
-        ({vertical.target_diff > 0 ? '+' : ''}
-        {Number(vertical.target_diff).toFixed(0)}%)
+        (vs Predefined Target {vertical.target_diff > 0 ? '+' : ''}
+         {Number(vertical.target_diff).toFixed(0)}%)
       </span>
     )}
   </div>

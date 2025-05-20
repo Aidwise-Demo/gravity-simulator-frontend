@@ -175,7 +175,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   const idx = quarters.indexOf(quarter);
   const dataPoint: any = {
     quarter,
-    actual: idx !== -1 && actualValues[idx] != null ? actualValues[idx] : 0,
+    actual: idx !== -1 && actualValues[idx] != null ? actualValues[idx] : null,
     target: idx !== -1 && targetValues[idx] != null ? targetValues[idx] : 0,
   };
   if (industryValues.length > 0) {
@@ -229,10 +229,10 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   }
   
   return (
-    <div className="flex flex-col h-full border-2 border-gray-200 rounded-lg shadow-md bg-white overflow-hidden">
-      <h3 className="px-4 py-3 text-sm font-medium bg-gray-50 border-b">{title}</h3>
-      <div className="flex-1 p-4">
-        <ResponsiveContainer width="100%" height="100%">
+    <div className="flex flex-col h-full  overflow-hidden">
+      <h3 className="px-4 py-3 text-sm font-medium bg-gray-50 ">{title}</h3>
+      <div className="flex-1 p-4 ">
+        <ResponsiveContainer width={430} height={260}>
           <LineChart
             data={filteredData}
             margin={{ top: 10, right: 10, left: 5, bottom: 20 }}
@@ -264,7 +264,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
                 boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
               }}
             />
-            <Legend
+            {/* <Legend
               align="right"
               verticalAlign="top"
               iconType="circle"
@@ -274,7 +274,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
                 paddingBottom: '5px',
                 paddingTop: '5px'
               }}
-            />
+            /> */}
          <Line
   type="linear"
   dataKey="actual"
@@ -291,7 +291,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   strokeWidth={2}
   dot={{ r: 3, strokeWidth: 1, fill: '#fff' }}
   activeDot={{ r: 6 }}
-  name="Target"
+  name="Predefined Target"
 />
 {industryValues.length > 0 && (
   <Line

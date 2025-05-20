@@ -34,7 +34,7 @@ const ScoreSummary = ({ scorePercent, targetsRatio, targetDiff, metric }: ScoreS
       <div className="relative mt-2 mb-1">
         <div className="flex items-end justify-center">
           <div className="text-2xl font-bold">{formattedScore}</div>
-          <div className={`ml-1 ${isPositive ? 'bg-green-500' : 'bg-red-500'} rounded p-1 text-white font-medium flex items-center`}>
+          <div className={`ml-1 ${isPositive ? 'bg-red-500' : 'bg-green-500'} rounded p-1 text-white font-medium flex items-center`}>
             <span className="inline mr-1 text-base">
               {isPositive ? '↑' : '↓'}
             </span>

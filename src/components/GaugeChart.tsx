@@ -118,6 +118,9 @@ interface GaugeChartProps {
   newTarget: number;
   metric: string;
   period: string;
+  title: string;
+  periodLabel: string;
+  showSimulatedTarget?: boolean; // <-- Add this prop
 }
 
 const formatValue = (value: number) => {
@@ -133,7 +136,10 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   overallValue,
   newTarget,
   metric,
-  period
+  period,
+  title,
+  periodLabel,
+  showSimulatedTarget = true // default to true
 }) => {
   const [formattedActual, setFormattedActual] = useState('');
   const [formattedTarget, setFormattedTarget] = useState('');
@@ -193,31 +199,15 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
       "A", r, r, 0, largeArcFlag, 0, end.x, end.y
     ].join(" ");
   };
-const getPreviousQuarter = (period: string) => {
-  // Example input: "Q2 2025"
-  const match = period.match(/Q([1-4]) (\d{4})/);
-  if (!match) return period;
-  let quarter = parseInt(match[1], 10);
-  let year = parseInt(match[2], 10);
-
-  if (quarter === 1) {
-    quarter = 4;
-    year -= 1;
-  } else {
-    quarter -= 1;
-  }
-  return `Q${quarter} ${year}`;
-};
 
   const centerX = 100;
   const centerY = 100;
   const radius = 78;
   const strokeWidth = 18;
   const simulatedAchievement = (safeActual / safeNewTarget) * 100;
-const simulatedArrowUp = simulatedAchievement >= 100;
-const simulatedArrowColor = simulatedArrowUp ? "#10b981" : "#ef4444";
-const simulatedAchievementStatus = `${Math.round(simulatedAchievement)}%`;
-
+  const simulatedArrowUp = simulatedAchievement >= 100;
+  const simulatedArrowColor = simulatedArrowUp ? "#10b981" : "#ef4444";
+  const simulatedAchievementStatus = `${Math.round(simulatedAchievement)}%`;
 
   const actualAngle = angleFromValue(safeActual);
   const targetAngle = angleFromValue(safeTarget);
@@ -227,9 +217,9 @@ const simulatedAchievementStatus = `${Math.round(simulatedAchievement)}%`;
   const newTargetPos = polarToCartesian(centerX, centerY, radius, newTargetAngle);
 
   return (
-    <div className="flex flex-col items-center border-2 border-gray-200 rounded-lg p-4 shadow-md bg-white"
-      >
-      <h3 className=" text-sm font-medium ">{metric} (in AED)</h3>
+    <div className="flex flex-col items-center ">
+      <h3 className="text-base font-semibold mb-1">{title}</h3>
+      <h3 className="text-sm font-medium">{metric} (in AED)</h3>
 
       <svg width="220" height="130" viewBox="0 0 200 130">
         {/* Background Arc */}
@@ -267,27 +257,30 @@ const simulatedAchievementStatus = `${Math.round(simulatedAchievement)}%`;
           strokeDasharray="2,1"
         />
         
-        {/* New Target Marker - Added with a different color and style */}
-        <circle 
-          cx={newTargetPos.x} 
-          cy={newTargetPos.y} 
-          r="5" 
-          fill="#8b5cf6" // Purple color for new target
-        />
-        <line
-          x1={newTargetPos.x}
-          y1={newTargetPos.y}
-          x2={newTargetPos.x}
-          y2={newTargetPos.y - 15}
-          stroke="#8b5cf6"
-          strokeWidth="2"
-          strokeDasharray="4,2" // Different dash pattern
-        />
+        {/* New Target Marker - Only if showSimulatedTarget */}
+        {showSimulatedTarget && (
+          <>
+            <circle 
+              cx={newTargetPos.x} 
+              cy={newTargetPos.y} 
+              r="5" 
+              fill="#8b5cf6"
+            />
+            <line
+              x1={newTargetPos.x}
+              y1={newTargetPos.y}
+              x2={newTargetPos.x}
+              y2={newTargetPos.y - 15}
+              stroke="#8b5cf6"
+              strokeWidth="2"
+              strokeDasharray="4,2"
+            />
+          </>
+        )}
         
         {/* Labels: 0, Max */}
         <text x="20" y="123" fontSize="11" fontWeight="medium">0</text>
-        <text x="180" y="123" fontSize="11" fontWeight="medium" textAnchor="end">{formattedMax}</text>
-        <text x="180" y="108" fontSize="10" fontWeight="normal" textAnchor="end">(Q4 Target)</text>
+        <text x="180" y="123" fontSize="11" fontWeight="medium" textAnchor="end"> Q4 Target: {formattedMax}</text>
         
         {/* Target Value Label */}
         <text 
@@ -301,17 +294,19 @@ const simulatedAchievementStatus = `${Math.round(simulatedAchievement)}%`;
           {formattedTarget}
         </text>
 
-        {/* New Target Value Label */}
-        <text 
-          x={newTargetPos.x} 
-          y={newTargetPos.y - 18} 
-          fontSize="11" 
-          textAnchor="middle" 
-          fill="#8b5cf6"
-          fontWeight="medium"
-        >
-          {formattedNewTarget}
-        </text>
+        {/* New Target Value Label - Only if showSimulatedTarget */}
+        {showSimulatedTarget && (
+          <text 
+            x={newTargetPos.x} 
+            y={newTargetPos.y - 18} 
+            fontSize="11" 
+            textAnchor="middle" 
+            fill="#8b5cf6"
+            fontWeight="medium"
+          >
+            {formattedNewTarget}
+          </text>
+        )}
 
         {/* Center Actual with improved styling */}
         <text x="100" y="92" textAnchor="middle" fontSize="26" fontWeight="bold">
@@ -319,44 +314,48 @@ const simulatedAchievementStatus = `${Math.round(simulatedAchievement)}%`;
         </text>
       </svg>
 
-      {/* <div className="text-sm font-medium mt-2 text-gray-800">
-        Vs Predefined Target: <span style={{color: statusColor}}>{achievementStatus}</span> 
-      </div> */}
       <div className="text-sm font-medium mt-2 text-gray-800 flex items-center gap-2">
-  Vs Predefined Target: 
-  <span style={{color: statusColor}} className="flex items-center gap-1">
-    {achievementStatus}
-    {safeActual >= safeTarget ? (
-      <span style={{color: "#10b981"}}>&uarr;</span>
-    ) : (
-      <span style={{color: "#ef4444"}}>&darr;</span>
-    )}
-  </span>
-</div>
-<div className="text-sm font-medium mt-1 text-gray-800 flex items-center gap-2">
-  Vs Simulated Target: 
-  <span style={{color: simulatedArrowColor}} className="flex items-center gap-1">
-    {simulatedAchievementStatus}
-    {simulatedArrowUp ? (
-      <span style={{color: "#10b981"}}>&uarr;</span>
-    ) : (
-      <span style={{color: "#ef4444"}}>&darr;</span>
-    )}
-  </span>
-</div>
-      <div className="flex flex-col gap-2 mt-3 text-sm font-medium border-t border-gray-200 pt-2 w-full">
+        vs Predefined Target: 
+        <span style={{color: statusColor}} className="flex items-center gap-1">
+          {achievementStatus}
+          {safeActual >= safeTarget ? (
+            <span style={{color: "#10b981"}}>&uarr;</span>
+          ) : (
+            <span style={{color: "#ef4444"}}>&darr;</span>
+          )}
+        </span>
+      </div>
+{showSimulatedTarget ? (
+  <div className="text-sm font-medium mt-1 text-gray-800 flex items-center gap-2 min-h-[24px]">
+    vs Simulated Target: 
+    <span style={{color: simulatedArrowColor}} className="flex items-center gap-1">
+      {simulatedAchievementStatus}
+      {simulatedArrowUp ? (
+        <span style={{color: "#10b981"}}>&uarr;</span>
+      ) : (
+        <span style={{color: "#ef4444"}}>&darr;</span>
+      )}
+    </span>
+  </div>
+) : (
+  // Placeholder to keep alignment
+  <div className="mt-1 min-h-[24px]">&nbsp;</div>
+)}
+      <div className="flex flex-col gap-2 mt-3 text-sm font-medium w-full">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full" style={{backgroundColor: statusColor}}></div>
-          <span>Actual {metric} for {getPreviousQuarter(period)}</span>
+          <span>Actual {metric} for {periodLabel}</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full bg-blue-500"></div>
-          <span>Target {metric} for {period}</span>
+          <span>Target {metric} for {periodLabel}</span>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="w-4 h-4 rounded-full bg-purple-500"></div>
-          <span>Simulated Target {metric}</span>
-        </div>
+        {showSimulatedTarget && (
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 rounded-full bg-purple-500"></div>
+            <span>Simulated Target {metric}</span>
+          </div>
+        )}
       </div>
     </div>
   );
