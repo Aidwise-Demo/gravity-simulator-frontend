@@ -317,6 +317,9 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
         <text x="100" y="92" textAnchor="middle" fontSize="26" fontWeight="bold">
           {formattedActual}
         </text>
+                <text x="100" y="105" textAnchor="middle" fontSize="9" >
+          Realistic {metric} Estimate
+        </text>
       </svg>
 
       <div className="text-sm font-medium mt-2 text-gray-800 flex items-center gap-2">
