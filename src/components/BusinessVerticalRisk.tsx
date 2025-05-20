@@ -584,9 +584,12 @@ import { fetchSimulationData } from '@/services/api'; // Keeping original API im
 // Tooltip-enhanced Triangle Pointer
 const TrianglePointer = ({ value, label, formatFunc, colorClass }) => (
   <div className="flex flex-col items-center group relative">
-    <svg className={`w-3.5 h-3.5 ${colorClass} fill-current`} viewBox="0 0 24 24">
+    {/* <svg className={`w-3.5 h-3.5 ${colorClass} fill-current`} viewBox="0 0 24 24">
       <path d="M12 2L6 14h12z" />
-    </svg>
+    </svg> */}
+    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+  <path d="M12 2L6 14h12z" fill={colorClass} />
+</svg>
     {/* <div className="text-[10px] mt-0.5 bg-white text-gray-900 px-1.5 py-0.5 rounded shadow-sm whitespace-nowrap border border-gray-200">
       {formatFunc(value)}
     </div> */}
@@ -596,13 +599,20 @@ const TrianglePointer = ({ value, label, formatFunc, colorClass }) => (
   </div>
 );
 
-// Color mapping for triangles
+// // Color mapping for triangles
+// const POINTER_COLORS = {
+//   Target: 'text-pink-600',
+//   'Baseline Projection': 'text-indigo-500',
+//   'Business Potential': '#3182ce',
+//   'Projected Industry Average': 'text-slate-500',
+//   'cut-off': 'text-cyan-500'
+// };
 const POINTER_COLORS = {
-  Target: 'text-pink-600',
-  'Baseline Projection': 'text-indigo-500',
-  'Business Potential': 'text-purple-500',
-  'Projected Industry Average': 'text-slate-500',
-  'cut-off': 'text-cyan-500'
+  Target: '#ec4899', // Tailwind pink-500
+  'Baseline Projection': '#6366f1', // Tailwind indigo-500
+  'Business Potential': '#3182ce', // Tailwind purple-500
+  'Projected Industry Average': '#64748b', // Tailwind slate-500
+  'cut-off': '#06b6d4' // Tailwind cyan-500
 };
 
 const BusinessVerticalRisk = ({
@@ -800,12 +810,15 @@ const BusinessVerticalRisk = ({
           <div key={idx} className="flex items-center space-x-2">
             {label === "Target" ? (
               // Render a line for Target
-              <div className={`w-1.5 h-6 rounded-full ${colorClass} bg-current`} />
+           <div className="w-1.5 h-6 rounded-full" style={{ backgroundColor: colorClass }} />
             ) : (
               // Render triangle for others
-              <svg className={`w-3.5 h-3.5 ${colorClass} fill-current`} viewBox="0 0 24 24">
-                <path d="M12 2L6 14h12z" />
-              </svg>
+              // <svg className={`w-3.5 h-3.5 ${colorClass} fill-current`} viewBox="0 0 24 24">
+              //   <path d="M12 2L6 14h12z" />
+              // </svg>
+              <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+  <path d="M12 2L6 14h12z" fill={colorClass} />
+</svg>
             )}
             <span>{label}</span>
           </div>

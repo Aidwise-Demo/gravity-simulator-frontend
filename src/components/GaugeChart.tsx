@@ -242,7 +242,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   return (
     <div className="flex flex-col items-center ">
       <div className="flex items-center gap-1 mb-1">
-        <h3 className="text-base font-semibold">{title}</h3>
+        <h3 className="px-4 py-3 text-sm font-medium bg-gray-50 ">{title}</h3>
         <span className="relative group" style={{ cursor: 'pointer' }}>
           <svg
             className="w-4 h-4 text-gray-400 inline-block"
