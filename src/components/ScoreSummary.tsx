@@ -32,14 +32,14 @@ const ScoreSummary = ({ scorePercent, targetsRatio, targetDiff, metric }: ScoreS
     <div className="p-4 rounded-lg text-center border-2 border-gray-300 shadow-md">
       <h3 className="text-sm font-medium ">Overall {metric} Target</h3>
       <div className="relative mt-2 mb-1">
-        <div className="flex items-end justify-center">
-          <div className="text-2xl font-bold">{formattedScore}</div>
-<div className={`ml-1 ${isPositive ? 'bg-red-500' : 'bg-green-500'} rounded px-1 py-0.5 text-white font-medium flex items-center text-xs`}>
-  <span className="inline mr-1" style={{ fontSize: '11px' }}>
-    vs Predefined Target{isPositive ? '↑' : '↓'}
-  </span>
-  <span className="text-[10px]">{formattedTargetDiff}%</span>
-</div>
+<div className="flex flex-col items-center justify-center">
+  <div className="text-2xl font-bold">{formattedScore}</div>
+  <div className={`mt-1 ${isPositive ? 'bg-red-500' : 'bg-green-500'} rounded px-1 py-0.5 text-white font-medium flex items-center text-xs`}>
+    <span className="inline mr-1" style={{ fontSize: '11px' }}>
+      vs Predefined Target  {isPositive ? '↑' : '↓'}
+    </span>
+    <span className="text-[10px]">{formattedTargetDiff}%</span>
+  </div>
         </div>
       </div>
       <div className="mt-2 pt-2 border-t border-gray-200">
