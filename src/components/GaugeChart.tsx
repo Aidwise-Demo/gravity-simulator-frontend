@@ -120,7 +120,8 @@ interface GaugeChartProps {
   period: string;
   title: string;
   periodLabel: string;
-  showSimulatedTarget?: boolean; // <-- Add this prop
+  showSimulatedTarget?: boolean; 
+  previuos_quarter_actual:number// <-- Add this prop
 }
 
 const formatValue = (value: number) => {
@@ -139,7 +140,8 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   period,
   title,
   periodLabel,
-  showSimulatedTarget = true // default to true
+  showSimulatedTarget = true,
+  previuos_quarter_actual // default to true
 }) => {
   const [formattedActual, setFormattedActual] = useState('');
   const [formattedTarget, setFormattedTarget] = useState('');
@@ -154,6 +156,9 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   const safeNewTarget = isNaN(newTarget) || newTarget <= 0 ? 1 : newTarget;
   const safeOverall = isNaN(overallValue) || overallValue <= 0 ? 1 : overallValue;
   const maxValue = Math.max(safeActual, safeTarget, safeOverall);
+  const safe_previuos_quarter_actual = isNaN(previuos_quarter_actual) || previuos_quarter_actual <= 0 ? 1 : previuos_quarter_actual;
+  const QoQ_growth=((safeActual - safe_previuos_quarter_actual)/safe_previuos_quarter_actual)*100;
+  
 
   useEffect(() => {
     setFormattedActual(formatValue(safeActual));
@@ -341,7 +346,18 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   // Placeholder to keep alignment
   <div className="mt-1 min-h-[24px]">&nbsp;</div>
 )}
-      <div className="flex flex-col gap-2 mt-3 text-sm font-medium w-full">
+      <div className="text-sm font-medium mt-2 text-gray-800 flex items-center gap-2">
+        QoQ Growth: 
+        <span style={{ color: QoQ_growth > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
+          {QoQ_growth.toFixed(2)}%
+          {QoQ_growth>0 ? (
+            <span style={{color: "#10b981"}}>&uarr;</span>
+          ) : (
+            <span style={{color: "#ef4444"}}>&darr;</span>
+          )}
+        </span>
+      </div>
+      <div className="flex flex-col gap-2 mt-3 text-sm  w-full">
         <div className="flex items-center gap-2">
           <div className="w-4 h-4 rounded-full" style={{backgroundColor: statusColor}}></div>
           <span>Actual {metric} for {periodLabel}</span>
