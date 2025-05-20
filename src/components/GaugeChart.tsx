@@ -126,8 +126,8 @@ interface GaugeChartProps {
 
 const formatValue = (value: number) => {
   if (value === undefined || value === null || isNaN(value)) return 'NA';
-  if (value >= 1e9) return (value / 1e9).toFixed(1) + 'B';
-  if (value >= 1e6) return (value / 1e6).toFixed(1) + 'M';
+  if (value >= 1e9) return (value / 1e9).toFixed(2) + 'B';
+  if (value >= 1e6) return (value / 1e6).toFixed(2) + 'M';
   return value.toString();
 };
 
