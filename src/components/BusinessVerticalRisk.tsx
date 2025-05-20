@@ -902,9 +902,18 @@ const BusinessVerticalRisk = ({
               <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
             </svg>
             {/* Tooltip */}
-            <div className="absolute right-0 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
-              Current status based on simulated vs. actual target results.
-            </div>
+<div className="absolute left-0 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap text-left">
+  <div><b>1. Gap Calculations:</b></div>
+  <div>gap_curr = (new_target_value - Predicted_Actual_Value) / Cut_off_value</div>
+  <div>gap_expected = (new_target_value - current*) / Cut_off_value</div>
+  <div>gap_industry = (Predicted_Industry_average - Predicted_Actual_Value) / Cut_off_value</div>
+  <div className="mt-2"><b>2. Risk Composite Score:</b></div>
+  <div>risk_composite = 0.5 × gap_curr + 0.3 × gap_expected + 0.2 × gap_industry</div>
+  <div className="mt-2"><b>3. Risk Level Classification:</b></div>
+  <div>Low Risk if risk_composite ≤ 0.1</div>
+  <div>Medium Risk if 0.1 &lt; risk_composite ≤ 0.25</div>
+  <div>High Risk if risk_composite &gt; 0.25</div>
+</div>
           </div>
         </div>
       </div>
