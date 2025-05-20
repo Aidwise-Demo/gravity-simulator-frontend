@@ -612,7 +612,7 @@ const POINTER_COLORS = {
   'Baseline Projection': '#6366f1', // Tailwind indigo-500
   'Business Potential': '#3182ce', // Tailwind purple-500
   'Projected Industry Average': '#64748b', // Tailwind slate-500
-  'cut-off': '#06b6d4' // Tailwind cyan-500
+  'cut-off': '#140ddb' // Tailwind cyan-500
 };
 
 const BusinessVerticalRisk = ({
