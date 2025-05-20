@@ -845,7 +845,7 @@ const BusinessVerticalRisk = ({
               total_initiative_score: Normalized value representing the number of ongoing initiatives, calculated as the number of initiatives for the business vertical divided by the maximum number of initiatives
             </div>
             <div><strong>Industry Average</strong>: Projected Benchmark average across similar companies.</div>
-            <div><strong>Cut-off</strong>: Maximum allowed threshold or upper bound for simulation.</div>
+            <div><strong>Cut-off</strong>: Defined as the highest value among the simulated target, industry average, and business potential, with an added buffer of 10% to accommodate strategic flexibility.</div>
           </div>
         </div>
       </div>
