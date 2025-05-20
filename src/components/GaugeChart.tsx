@@ -121,8 +121,8 @@ interface GaugeChartProps {
   title: string;
   periodLabel: string;
   showSimulatedTarget?: boolean; 
-  previuos_quarter_actual:number,
-  previuos_quarter_target:number// <-- Add this prop
+  previuos_quarter_actual: number;
+  previuos_quarter_target: number;
 }
 
 const formatValue = (value: number) => {
@@ -131,8 +131,8 @@ const formatValue = (value: number) => {
   if (value >= 1e6) return (value / 1e6).toFixed(2) + 'M';
   return value.toString();
 };
+
 function getPreviousQuarter(quarterStr: string) {
-  // Example input: "Q2 2025"
   const match = quarterStr.match(/Q([1-4]) (\d{4})/);
   if (!match) return quarterStr;
   let q = parseInt(match[1], 10);
@@ -146,9 +146,6 @@ function getPreviousQuarter(quarterStr: string) {
   return `Q${q} ${year}`;
 }
 
-// Inside your GaugeChart component:
-
-
 const GaugeChart: React.FC<GaugeChartProps> = ({
   actualValue,
   targetValue,
@@ -160,7 +157,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   periodLabel,
   showSimulatedTarget = true,
   previuos_quarter_actual,
-  previuos_quarter_target // default to true
+  previuos_quarter_target
 }) => {
   const [formattedActual, setFormattedActual] = useState('');
   const [formattedTarget, setFormattedTarget] = useState('');
@@ -168,7 +165,8 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   const [formattedMax, setFormattedMax] = useState('');
   const [achievementStatus, setAchievementStatus] = useState('');
   const [statusColor, setStatusColor] = useState('#ef4444');
-const previousQuarterLabel = getPreviousQuarter(period);
+  const previousQuarterLabel = getPreviousQuarter(period);
+
   // Ensure we have valid values to work with
   const safeActual = isNaN(actualValue) || actualValue < 0 ? 0 : actualValue;
   const safeTarget = isNaN(targetValue) || targetValue <= 0 ? 1 : targetValue;
@@ -176,10 +174,9 @@ const previousQuarterLabel = getPreviousQuarter(period);
   const safeOverall = isNaN(overallValue) || overallValue <= 0 ? 1 : overallValue;
   const maxValue = Math.max(safeActual, safeTarget, safeOverall);
   const safe_previuos_quarter_actual = isNaN(previuos_quarter_actual) || previuos_quarter_actual <= 0 ? 1 : previuos_quarter_actual;
-  const QoQ_growth=((safeActual - safe_previuos_quarter_actual)/safe_previuos_quarter_actual)*100;
-    const safe_previuos_quarter_target = isNaN(previuos_quarter_target) || previuos_quarter_target <= 0 ? 1 : previuos_quarter_target;
-  const QoQ_growth_target=((safeActual - safe_previuos_quarter_target)/safe_previuos_quarter_target)*100;
-  
+  const QoQ_growth = ((safeActual - safe_previuos_quarter_actual) / safe_previuos_quarter_actual) * 100;
+  const safe_previuos_quarter_target = isNaN(previuos_quarter_target) || previuos_quarter_target <= 0 ? 1 : previuos_quarter_target;
+  const QoQ_growth_target = ((safeActual - safe_previuos_quarter_target) / safe_previuos_quarter_target) * 100;
 
   useEffect(() => {
     setFormattedActual(formatValue(safeActual));
@@ -188,7 +185,7 @@ const previousQuarterLabel = getPreviousQuarter(period);
     setFormattedMax(formatValue(maxValue));
     
     // Calculate achievement percentage
-    const percentage = ((safeTarget-safeActual) / safeTarget) * 100;
+    const percentage = ((safeTarget - safeActual) / safeTarget) * 100;
     setAchievementStatus(`${Math.round(percentage)}%`);
     
     // Set color based on achievement percentage
@@ -230,7 +227,7 @@ const previousQuarterLabel = getPreviousQuarter(period);
   const centerY = 100;
   const radius = 78;
   const strokeWidth = 18;
-  const simulatedAchievement = ((safeNewTarget-safeActual) / safeNewTarget) * 100;
+  const simulatedAchievement = ((safeNewTarget - safeActual) / safeNewTarget) * 100;
   const simulatedArrowUp = simulatedAchievement >= 100;
   const simulatedArrowColor = simulatedArrowUp ? "#10b981" : "#ef4444";
   const simulatedAchievementStatus = `${Math.round(simulatedAchievement)}%`;
@@ -238,14 +235,28 @@ const previousQuarterLabel = getPreviousQuarter(period);
   const actualAngle = angleFromValue(safeActual);
   const targetAngle = angleFromValue(safeTarget);
   const newTargetAngle = angleFromValue(safeNewTarget);
-  
+
   const targetPos = polarToCartesian(centerX, centerY, radius, targetAngle);
   const newTargetPos = polarToCartesian(centerX, centerY, radius, newTargetAngle);
 
   return (
     <div className="flex flex-col items-center ">
-      <h3 className="text-base font-semibold mb-1">{title}</h3>
-      <h3 className="text-sm font-medium">{metric} (in AED)</h3>
+      <div className="flex items-center gap-1 mb-1">
+        <h3 className="text-base font-semibold">{title}</h3>
+        <span className="relative group" style={{ cursor: 'pointer' }}>
+          <svg
+            className="w-4 h-4 text-gray-400 inline-block"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <circle cx="10" cy="10" r="10" />
+            <text x="10" y="15" textAnchor="middle" fontSize="12" fill="white">i</text>
+          </svg>
+          <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 p-2 text-xs bg-gray-700 text-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition pointer-events-none z-50">
+            Realistic EBITDA estimate is based on the most realistic, risk-adjusted view across verticals — taking the minimum of target or business potential per business unit.
+          </div>
+        </span>
+      </div>
 
       <svg width="220" height="130" viewBox="0 0 200 130">
         {/* Background Arc */}
@@ -265,25 +276,8 @@ const previousQuarterLabel = getPreviousQuarter(period);
           fill="none"
           strokeLinecap="round"
         />
-        
-        {/* Target Marker */}
-        <circle 
-          cx={targetPos.x} 
-          cy={targetPos.y} 
-          r="5" 
-          fill="#3b82f6"
-        />
-        <line
-          x1={targetPos.x}
-          y1={targetPos.y}
-          x2={targetPos.x}
-          y2={targetPos.y - 15}
-          stroke="#3b82f6"
-          strokeWidth="2"
-          strokeDasharray="2,1"
-        />
-        
-        {/* New Target Marker - Only if showSimulatedTarget */}
+
+        {/* Simulated Target Marker - Only if showSimulatedTarget */}
         {showSimulatedTarget && (
           <>
             <circle 
@@ -303,7 +297,24 @@ const previousQuarterLabel = getPreviousQuarter(period);
             />
           </>
         )}
-        
+
+        {/* Target Marker (Predefined Target) - Rendered after simulated so it's on top */}
+        <circle 
+          cx={targetPos.x} 
+          cy={targetPos.y} 
+          r="5" 
+          fill="#3b82f6"
+        />
+        <line
+          x1={targetPos.x}
+          y1={targetPos.y}
+          x2={targetPos.x}
+          y2={targetPos.y - 15}
+          stroke="#3b82f6"
+          strokeWidth="2"
+          strokeDasharray="2,1"
+        />
+
         {/* Labels: 0, Max */}
         <text x="20" y="123" fontSize="11" fontWeight="medium">0</text>
         <text x="180" y="123" fontSize="11" fontWeight="medium" textAnchor="end"> Q4 Target: {formattedMax}</text>
@@ -338,93 +349,113 @@ const previousQuarterLabel = getPreviousQuarter(period);
         <text x="100" y="92" textAnchor="middle" fontSize="26" fontWeight="bold">
           {formattedActual}
         </text>
-             <text x="100" y="108" textAnchor="middle" fontSize="9">
-  <tspan>
-    Realistic {metric} Estimate
-  </tspan>
-  <tspan>
-    {/* Info icon with tooltip */}
-    <tspan
-      dx="6"
-      style={{ cursor: 'pointer' }}
-    >
-      <title>
-        It is the sum of minimum of execution adjusted forecast and simulated target across all verticals
-      </title>
-      &#9432;
-    </tspan>
-  </tspan>
-</text>
       </svg>
 
-<div className="grid grid-cols-2 gap-x-6 gap-y-2 mt-4 w-full max-w-md">
-  {/* Left column */}
-  <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
-    vs Predefined Target: 
-    <span style={{color: statusColor}} className="flex items-center gap-1">
-      {achievementStatus}
-      {safeActual >= safeTarget ? (
-        <span style={{color: "#10b981"}}>&uarr;</span>
-      ) : (
-        <span style={{color: "#ef4444"}}>&darr;</span>
-      )}
-    </span>
-  </div>
-  <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
-    vs {previousQuarterLabel} Actual: 
-    <span style={{ color: QoQ_growth > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
-      {QoQ_growth.toFixed(2)}%
-      {QoQ_growth>0 ? (
-        <span style={{color: "#10b981"}}>&uarr;</span>
-      ) : (
-        <span style={{color: "#ef4444"}}>&darr;</span>
-      )}
-    </span>
-  </div>
-  {/* Right column */}
-  {showSimulatedTarget ? (
-    <div className="text-sm font-medium text-gray-800 flex items-center gap-2 min-h-[24px]">
-      vs Simulated Target: 
-      <span style={{color: simulatedArrowColor}} className="flex items-center gap-1">
-        {simulatedAchievementStatus}
-        {simulatedArrowUp ? (
-          <span style={{color: "#10b981"}}>&uarr;</span>
+      <div className="grid grid-cols-2 gap-x-6 gap-y-2 mt-4 w-full max-w-md">
+        {/* Left column */}
+        <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
+          vs Predefined Target: 
+          <span style={{color: statusColor}} className="flex items-center gap-1">
+            {achievementStatus}
+            {safeActual >= safeTarget ? (
+              <span style={{color: "#10b981"}}>&uarr;</span>
+            ) : (
+              <span style={{color: "#ef4444"}}>&darr;</span>
+            )}
+          </span>
+        </div>
+        <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
+          vs {previousQuarterLabel} Actual: 
+          <span style={{ color: QoQ_growth > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
+            {Math.abs(QoQ_growth).toFixed(0)}%
+            {QoQ_growth > 0 ? (
+              <span style={{color: "#10b981"}}>&uarr;</span>
+            ) : (
+              <span style={{color: "#ef4444"}}>&darr;</span>
+            )}
+          </span>
+        </div>
+        {/* Right column */}
+        {showSimulatedTarget ? (
+          <div className="text-sm font-medium text-gray-800 flex items-center gap-2 min-h-[24px]">
+            vs Simulated Target: 
+            <span style={{color: simulatedArrowColor}} className="flex items-center gap-1">
+              {simulatedAchievementStatus}
+              {simulatedArrowUp ? (
+                <span style={{color: "#10b981"}}>&uarr;</span>
+              ) : (
+                <span style={{color: "#ef4444"}}>&darr;</span>
+              )}
+            </span>
+          </div>
         ) : (
-          <span style={{color: "#ef4444"}}>&darr;</span>
+          <div className="min-h-[24px]">&nbsp;</div>
         )}
-      </span>
-    </div>
-  ) : (
-    <div className="min-h-[24px]">&nbsp;</div>
-  )}
-  <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
-    vs {previousQuarterLabel} Target: 
-    <span style={{ color: QoQ_growth_target > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
-      {QoQ_growth_target.toFixed(2)}%
-      {QoQ_growth_target>0 ? (
-        <span style={{color: "#10b981"}}>&uarr;</span>
-      ) : (
-        <span style={{color: "#ef4444"}}>&darr;</span>
-      )}
-    </span>
-  </div>
-</div>
-<div className="grid grid-cols-2 gap-x-6 gap-y-2 mt-4 text-xs w-full max-w-md">
-  <div className="flex items-center gap-1">
-    <div className="w-2.5 h-2.5 rounded-full" style={{backgroundColor: statusColor}}></div>
-    <span>Actual {metric} for {periodLabel}</span>
-  </div>
-  <div className="flex items-center gap-1">
-    <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
-    <span>Target {metric} for {periodLabel}</span>
-  </div>
-  {showSimulatedTarget && (
-    <div className="flex items-center gap-1">
-      <div className="w-2.5 h-2.5 rounded-full bg-purple-500"></div>
-      <span>Simulated Target {metric}</span>
-    </div>
-  )}
-</div>
+        <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
+          vs {previousQuarterLabel} Target: 
+          <span style={{ color: QoQ_growth_target > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
+            {Math.abs(QoQ_growth_target).toFixed(0)}%
+            {QoQ_growth_target > 0 ? (
+              <span style={{color: "#10b981"}}>&uarr;</span>
+            ) : (
+              <span style={{color: "#ef4444"}}>&darr;</span>
+            )}
+          </span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-x-2 gap-y-2 mt-4 text-xs w-full max-w-md">
+        <div className="flex items-center gap-1">
+          <div className="w-2.5 h-2.5 rounded-full bg-blue-500"></div>
+          <span>Predefined Target {metric} for {periodLabel}</span>
+        </div>
+        {showSimulatedTarget && (
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded-full bg-purple-500"></div>
+            <span>Simulated Target {metric} for {periodLabel}</span>
+          </div>
+        )}
+        {/* Legend for status */}
+        <div className="flex gap-4 mt-4 text-xs items-center col-span-2">
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#10b981" }}></div>
+            <span className="whitespace-nowrap">On Target</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#f59e0b" }}></div>
+            <span className="whitespace-nowrap">Alert</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: "#ef4444" }}></div>
+            <span className="whitespace-nowrap">Off Target</span>
+          </div>
+          {/* Info icon with tooltip */}
+          <span className="relative group ml-2" style={{ cursor: 'pointer' }}>
+            <svg
+              className="w-4 h-4 text-gray-400 inline-block"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <circle cx="10" cy="10" r="10" />
+              <text x="10" y="15" textAnchor="middle" fontSize="12" fill="white">i</text>
+            </svg>
+            <div
+              className="absolute left-1/2 bottom-full mb-2 -translate-x-1/2 w-72 p-2 text-xs bg-gray-700 text-white rounded shadow-lg opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto z-50 transition"
+              style={{ minWidth: '220px', textAlign: 'left' }}
+            >
+              <div>
+                <b>Status Calculation:</b><br />
+                Status = (Realistic EBITDA Estimate / Predefined Target) × 100
+              </div>
+              <div className="mt-2">
+                <b>On Target:</b> Status &gt;= 100%<br />
+                <b>Alert:</b> Status &gt;= 90% and &lt; 100%<br />
+                <b>Off Target:</b> Status &lt; 90%
+              </div>
+            </div>
+          </span>
+        </div>
+      </div>
     </div>
   );
 };

@@ -487,12 +487,12 @@ const Index = () => {
               options={periodOptions} 
               onChange={handlePeriodChange} 
             />
-            <FilterDropdown 
+            {/* <FilterDropdown 
               label="Industry Benchmark" 
               value={benchmark} 
               options={benchmarkOptions} 
               onChange={handleBenchmarkChange} 
-            />
+            /> */}
             <FilterDropdown 
               label="Metric" 
               value={metric} 
@@ -528,7 +528,7 @@ const Index = () => {
         newTarget={data.summary_current.newTarget}
         period={period}
         metric={metric}
-        title={`Current Quarter (${period})`}
+        title={`Realistic ${metric} Estimate (${period})`}
         periodLabel={period}
         showSimulatedTarget={true}
         previuos_quarter_actual={data.summary.actualValue}
@@ -585,7 +585,7 @@ const Index = () => {
 </div>
 <SharedLegend />
         {/* Lower Section - Business Vertical Risk & Score Summary */}
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-4">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-2 mt-4">
           {/* Business Vertical Risk Assessment */}
           <div className="lg:col-span-3">
             <BusinessVerticalRisk

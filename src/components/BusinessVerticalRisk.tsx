@@ -599,8 +599,8 @@ const TrianglePointer = ({ value, label, formatFunc, colorClass }) => (
 // Color mapping for triangles
 const POINTER_COLORS = {
   Target: 'text-pink-600',
-  'Linear Forecast': 'text-indigo-500',
-  'Execution-Adjusted Forecast': 'text-purple-500',
+  'Baseline Projection': 'text-indigo-500',
+  'Business Potential': 'text-purple-500',
   'Projected Industry Average': 'text-slate-500',
   'cut-off': 'text-cyan-500'
 };
@@ -769,8 +769,8 @@ const BusinessVerticalRisk = ({
 
   // Helper to map keys to legend and pointer labels
   const getPointerLabel = (key) => {
-    if (key === 'current') return 'Linear Forecast';
-    if (key === 'currentStar') return 'Execution-Adjusted Forecast';
+    if (key === 'current') return 'Baseline Projection';
+    if (key === 'currentStar') return 'Business Potential';
     if (key === 'industryAverage') return 'Projected Industry Average';
     if (key === 'cutoff') return 'Cut-off';
     return key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1');
@@ -778,8 +778,8 @@ const BusinessVerticalRisk = ({
 
   // Helper to map keys to color classes
   const getPointerColor = (key) => {
-    if (key === 'current') return POINTER_COLORS['Linear Forecast'];
-    if (key === 'currentStar') return POINTER_COLORS['Execution-Adjusted Forecast'];
+    if (key === 'current') return POINTER_COLORS['Baseline Projection'];
+    if (key === 'currentStar') return POINTER_COLORS['Business Potential'];
     if (key === 'industryAverage') return POINTER_COLORS['Projected Industry Average'];
     if (key === 'cutoff') return POINTER_COLORS['cut-off'];
     return POINTER_COLORS[key.charAt(0).toUpperCase() + key.slice(1)];
@@ -823,8 +823,8 @@ const BusinessVerticalRisk = ({
           {/* Tooltip */}
           <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
             <div><strong>Target</strong>: Target for Selected Period</div>
-            <div><strong>Linear Forecast</strong>: Projected Value for Selected Period</div>
-            <div><strong>Execution-Adjusted Forecast</strong>: Adjusted Projected Value for the Selected Period (based on Ongoing Initiatives):<br />
+            <div><strong>Baseline Projection</strong>: Projected Value for Selected Period</div>
+            <div><strong>Business Potential</strong>: Adjusted Projected Value for the Selected Period (based on Ongoing Initiatives):<br />
               1 + (0.25 + factor) × factor_based_on_time_left × (0.25 + total_initiative_score)<br />
               Where:<br />
               factor: Proportion of initiatives that are currently on track<br />
