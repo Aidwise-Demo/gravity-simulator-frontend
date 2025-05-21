@@ -896,16 +896,17 @@ const Index = () => {
         {/* Score Card and Trend Charts */}
 <div className="flex flex-col lg:flex-row gap-2 mb-6">
   {/* Score Card (20% width) */}
-  <div className="w-full lg:w-[20%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col h-full justify-center border border-gray-200">
+  <div className="w-full lg:w-[20%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col h-full justify-center border border-gray-200 h-[380px]">
     <ScoreSummary
       scorePercent={data.overallScore.scorePercent}
       targetsRatio={data.overallScore.targetsRatio}
       targetDiff={data.overallScore.targetDiff}
+      actual_target={data.overallScore.actual_target}
       metric={metric}
     />
   </div>
   {/* Trend Chart 1 (40% width) */}
-  <div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col border border-gray-200 relative">
+  <div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col border border-gray-200 relative h-[380px]">
     {/* Header with background */}
     <div className="w-full bg-gray-50 px-4 py-2 rounded mb-4 flex items-center">
       <span className="text-lg font-semibold text-gray-800">Overall Trend Analysis</span>
@@ -932,28 +933,52 @@ const Index = () => {
     />
   </div>
   {/* Trend Chart 2 (40% width) */}
-  <div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col border border-gray-200 relative">
-    {hasBusinessVerticalData && (
-      <>
-        {/* Header with background */}
-        <div className="w-full bg-gray-50 px-4 py-2 rounded mb-4 flex items-center">
-          <span className="text-lg font-semibold text-gray-800">Business Vertical Trend Analysis</span>
-        </div>
-        <TrendAnalysis 
-          title=""
-          quarters={filteredBusinessVerticalData.quarters}
-          actualValues={filteredBusinessVerticalData.actualValues}
-          targetValues={filteredBusinessVerticalData.targetValues}
-          industryValues={filteredBusinessVerticalData.industryValues}
-          simulatedTargetValues={filteredBusinessVerticalData.simulatedTargetValues}
-          simulatedActualValues={filteredBusinessVerticalData.simulatedActualValues}
-          simulatedIndustryValues={filteredBusinessVerticalData.simulatedIndustryValues}
-          selectedQuarter={period}
-          metric={metric}
-        />
-      </>
-    )}
-  </div>
+  {/* Trend Chart 2 (40% width) */}
+<div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col border border-gray-200 relative h-[380px]">
+  {hasBusinessVerticalData && (
+  <>
+    {/* Header with background */}
+    <div className="w-full bg-gray-50 px-4 py-2 rounded mb-4 flex items-center">
+      <span className="text-lg font-semibold text-gray-800">Business Vertical Trend Analysis</span>
+    </div>
+    {/* PeriodSummary for Business Vertical */}
+    <div className="absolute top-0 right-0 z-10">
+      <PeriodSummary
+        period={period}
+        metric={metric}
+        actualValue={
+          // Use the same array as passed to TrendAnalysis
+          filteredBusinessVerticalData.simulatedActualValues[
+            filteredBusinessVerticalData.quarters.indexOf(period)
+          ]
+        }
+        targetValue={
+          filteredBusinessVerticalData.targetValues[
+            filteredBusinessVerticalData.quarters.indexOf(period)
+          ]
+        }
+        simulatedTarget={
+          filteredBusinessVerticalData.simulatedTargetValues[
+            filteredBusinessVerticalData.quarters.indexOf(period)
+          ]
+        }
+      />
+    </div>
+    <TrendAnalysis 
+      title=""
+      quarters={filteredBusinessVerticalData.quarters}
+      actualValues={filteredBusinessVerticalData.actualValues}
+      targetValues={filteredBusinessVerticalData.targetValues}
+      industryValues={filteredBusinessVerticalData.industryValues}
+      simulatedTargetValues={filteredBusinessVerticalData.simulatedTargetValues}
+      simulatedActualValues={filteredBusinessVerticalData.simulatedActualValues}
+      simulatedIndustryValues={filteredBusinessVerticalData.simulatedIndustryValues}
+      selectedQuarter={period}
+      metric={metric}
+    />
+  </>
+)}
+</div>
 </div>
         <SharedLegend />
         {/* Lower Section - Business Vertical Risk */}

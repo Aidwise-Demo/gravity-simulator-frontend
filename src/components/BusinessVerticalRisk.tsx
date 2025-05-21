@@ -584,7 +584,7 @@ import { fetchSimulationData } from '@/services/api'; // Adjust path if needed
 // Triangle pointer (no tooltip here, tooltip will be on the bar/slider group)
 const TrianglePointer = ({ colorClass }) => (
   <div className="flex flex-col items-center relative">
-    <svg className="w-5 h-5" viewBox="0 0 24 24">
+    <svg className="w-7 h-7" viewBox="0 0 24 24">
       <path d="M12 2L6 14h12z" fill={colorClass} />
     </svg>
   </div>
@@ -735,8 +735,12 @@ const BusinessVerticalRisk = ({
   };
 
   return (
+    
     <div className="w-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
       {/* Legend */}
+           <h2 className="text-blue-600 font-medium text-lg">
+          Business Vertical Targets - Risk Assessment & Scenario Analysis
+        </h2>
       <div className="flex gap-6 text-sm mb-5 items-center relative p-3 bg-gray-50 border border-gray-200 rounded-lg">
         {/* Predefined Target as thin line */}
         <div className="flex items-center space-x-2">
