@@ -187,11 +187,12 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
     // Calculate achievement percentage
     const percentage = ((safeTarget - safeActual) / safeTarget) * 100;
     setAchievementStatus(`${Math.round(percentage)}%`);
+    const percentage_for_gauge = ((safeActual) / safeNewTarget) * 100;
     
     // Set color based on achievement percentage
-    if (percentage >= 100) {
+    if (percentage_for_gauge >= 100) {
       setStatusColor('#10b981'); // green
-    } else if (percentage >= 90) {
+    } else if (percentage_for_gauge >= 90) {
       setStatusColor('#f59e0b'); // yellow
     } else {
       setStatusColor('#ef4444'); // red
@@ -353,17 +354,20 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
 
       <div className="grid grid-cols-2 gap-x-6 gap-y-2 mt-4 w-full max-w-md">
         {/* Left column */}
-        <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
-          vs Predefined Target: 
-          <span style={{color: statusColor}} className="flex items-center gap-1">
-            {achievementStatus}
-            {safeActual >= safeTarget ? (
-              <span style={{color: "#10b981"}}>&uarr;</span>
-            ) : (
-              <span style={{color: "#ef4444"}}>&darr;</span>
-            )}
-          </span>
-        </div>
+<div className="text-sm font-medium text-gray-800 flex items-center gap-2">
+  vs Predefined Target: 
+  <span
+    style={{ color: safeActual >= safeTarget ? "#10b981" : "#ef4444" }}
+    className="flex items-center gap-1"
+  >
+    {Math.abs(Number(achievementStatus.replace('%', ''))).toFixed(0)}%
+    {safeActual >= safeTarget ? (
+      <span style={{ color: "#10b981" }}>&uarr;</span>
+    ) : (
+      <span style={{ color: "#ef4444" }}>&darr;</span>
+    )}
+  </span>
+</div>
         <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
           vs {previousQuarterLabel} Actual: 
           <span style={{ color: QoQ_growth > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
@@ -376,21 +380,24 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
           </span>
         </div>
         {/* Right column */}
-        {showSimulatedTarget ? (
-          <div className="text-sm font-medium text-gray-800 flex items-center gap-2 min-h-[24px]">
-            vs Simulated Target: 
-            <span style={{color: simulatedArrowColor}} className="flex items-center gap-1">
-              {simulatedAchievementStatus}
-              {simulatedArrowUp ? (
-                <span style={{color: "#10b981"}}>&uarr;</span>
-              ) : (
-                <span style={{color: "#ef4444"}}>&darr;</span>
-              )}
-            </span>
-          </div>
-        ) : (
-          <div className="min-h-[24px]">&nbsp;</div>
-        )}
+{showSimulatedTarget ? (
+  <div className="text-sm font-medium text-gray-800 flex items-center gap-2 min-h-[24px]">
+    vs Simulated Target: 
+    <span
+      style={{ color: simulatedArrowUp ? "#10b981" : "#ef4444" }}
+      className="flex items-center gap-1"
+    >
+      {Math.abs(Number(simulatedAchievementStatus.replace('%', ''))).toFixed(0)}%
+      {simulatedArrowUp ? (
+        <span style={{ color: "#10b981" }}>&uarr;</span>
+      ) : (
+        <span style={{ color: "#ef4444" }}>&darr;</span>
+      )}
+    </span>
+  </div>
+) : (
+  <div className="min-h-[24px]">&nbsp;</div>
+)}
         <div className="text-sm font-medium text-gray-800 flex items-center gap-2">
           vs {previousQuarterLabel} Target: 
           <span style={{ color: QoQ_growth_target > 0 ? "#10b981" : "#ef4444" }} className="flex items-center gap-1">
