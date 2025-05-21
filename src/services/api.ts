@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const API_URL = 'http://localhost:7000/api/gravity/simulation';
-const API_URL = 'https://api.gravity-simulator.aidwise.in/api/gravity/simulation';
+const API_URL = 'http://localhost:7000/api/gravity/simulation';
+// const API_URL = 'https://api.gravity-simulator.aidwise.in/api/gravity/simulation';
 
 
 // Mock data in case the API fails

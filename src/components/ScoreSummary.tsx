@@ -29,7 +29,7 @@ const ScoreSummary = ({ scorePercent, targetsRatio, targetDiff, metric }: ScoreS
   const isPositive = targetDiff >= 0;
 
   return (
-    <div className="p-4 rounded-lg text-center border-2 border-gray-300 shadow-md">
+    <div className="p-4 rounded-lg text-center ">
       <h3 className="text-sm font-medium ">Overall {metric} Target</h3>
       <div className="relative mt-2 mb-1">
 <div className="flex flex-col items-center justify-center">
@@ -42,7 +42,7 @@ const ScoreSummary = ({ scorePercent, targetsRatio, targetDiff, metric }: ScoreS
   </div>
         </div>
       </div>
-      <div className="mt-2 pt-2 border-t border-gray-200">
+      <div className="mt-2 pt-2 ">
         <div className="text-2xl font-medium">{targetsRatio}</div>
         <div className="text-xs text-blue-600 font-medium">Business verticals</div>
         <div className="text-xs font-bold text-black-600 mt-0">Face High Target Achievement Risk</div>

@@ -262,7 +262,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
     <div className="flex flex-col h-full overflow-hidden">
       <h3 className="px-4 py-3 text-sm font-medium bg-gray-50 ">{title}</h3>
       <div className="flex-1 p-4 ">
-        <ResponsiveContainer width={400} height={260}>
+        <ResponsiveContainer width={520} height={260}>
           <LineChart
             data={filteredData}
             margin={{ top: 10, right: 10, left: 5, bottom: 20 }}
