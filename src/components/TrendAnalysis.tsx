@@ -118,6 +118,7 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  ReferenceArea,
   Legend
 } from 'recharts';
 
@@ -132,6 +133,10 @@ interface TrendAnalysisProps {
   simulatedIndustryValues?: number[];
   selectedQuarter?: string;
   metric: string;
+  thresholds?: {
+    ntv_low_medium: number;
+    ntv_medium_high: number;
+  };
 }
 
 const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
@@ -144,7 +149,8 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   simulatedActualValues = [],
   simulatedIndustryValues = [],
   selectedQuarter,
-  metric
+  metric,
+  thresholds
 }) => {
   // Define all quarters till Q4 2025
   const allQuarters = [
@@ -258,6 +264,17 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
     }
   }
 
+  // Find the max value for Y axis for ReferenceArea
+  const allYValues = [
+    ...actualValues,
+    ...targetValues,
+    ...(industryValues || []),
+    ...(simulatedTargetValues || []),
+    ...(simulatedActualValues || []),
+    ...(simulatedIndustryValues || [])
+  ].filter((v) => typeof v === "number" && !isNaN(v));
+  const yMax = allYValues.length > 0 ? Math.max(...allYValues) : 0;
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <h3 className="px-4 py-3 text-sm font-medium bg-gray-50 ">{title}</h3>
@@ -268,6 +285,35 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
             margin={{ top: 10, right: 10, left: 5, bottom: 20 }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke="#eee" />
+            {/* Threshold bands */}
+            {thresholds && (
+              <>
+                {/* Green: 0 to ntv_low_medium */}
+                <ReferenceArea
+                  y1={0}
+                  y2={thresholds.ntv_low_medium}
+                  strokeOpacity={0}
+                  fill="rgba(34,197,94,0.12)" // green-500/15
+                  ifOverflow="extendDomain"
+                />
+                {/* Yellow: ntv_low_medium to ntv_medium_high */}
+                <ReferenceArea
+                  y1={thresholds.ntv_low_medium}
+                  y2={thresholds.ntv_medium_high}
+                  strokeOpacity={0}
+                  fill="rgba(253,224,71,0.18)" // yellow-400/20
+                  ifOverflow="extendDomain"
+                />
+                {/* Red: ntv_medium_high to yMax */}
+                <ReferenceArea
+                  y1={thresholds.ntv_medium_high}
+                  y2={yMax * 1.05}
+                  strokeOpacity={0}
+                  fill="rgba(239,68,68,0.13)" // red-500/15
+                  ifOverflow="extendDomain"
+                />
+              </>
+            )}
             <XAxis
               dataKey="quarter"
               type="category"
@@ -296,17 +342,6 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
                 boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
               }}
             />
-            {/* <Legend
-              align="right"
-              verticalAlign="top"
-              iconType="circle"
-              iconSize={8}
-              wrapperStyle={{
-                fontSize: '9px',
-                paddingBottom: '5px',
-                paddingTop: '5px'
-              }}
-            /> */}
             <Line
               type="linear"
               dataKey="actual"

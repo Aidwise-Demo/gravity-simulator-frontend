@@ -942,40 +942,51 @@ const Index = () => {
       <span className="text-lg font-semibold text-gray-800">Business Vertical Trend Analysis</span>
     </div>
     {/* PeriodSummary for Business Vertical */}
-    <div className="absolute top-0 right-0 z-10">
-      <PeriodSummary
-        period={period}
-        metric={metric}
-        actualValue={
-          // Use the same array as passed to TrendAnalysis
-          filteredBusinessVerticalData.simulatedActualValues[
-            filteredBusinessVerticalData.quarters.indexOf(period)
-          ]
-        }
-        targetValue={
-          filteredBusinessVerticalData.targetValues[
-            filteredBusinessVerticalData.quarters.indexOf(period)
-          ]
-        }
-        simulatedTarget={
-          filteredBusinessVerticalData.simulatedTargetValues[
-            filteredBusinessVerticalData.quarters.indexOf(period)
-          ]
-        }
-      />
-    </div>
-    <TrendAnalysis 
-      title=""
-      quarters={filteredBusinessVerticalData.quarters}
-      actualValues={filteredBusinessVerticalData.actualValues}
-      targetValues={filteredBusinessVerticalData.targetValues}
-      industryValues={filteredBusinessVerticalData.industryValues}
-      simulatedTargetValues={filteredBusinessVerticalData.simulatedTargetValues}
-      simulatedActualValues={filteredBusinessVerticalData.simulatedActualValues}
-      simulatedIndustryValues={filteredBusinessVerticalData.simulatedIndustryValues}
-      selectedQuarter={period}
-      metric={metric}
-    />
+<div className="absolute top-0 right-0 z-10">
+  <PeriodSummary
+    period={period}
+    metric={metric}
+    actualValue={
+      filteredBusinessVerticalData.simulatedActualValues[
+        filteredBusinessVerticalData.quarters.indexOf(period)
+      ]
+    }
+    targetValue={
+      filteredBusinessVerticalData.targetValues[
+        filteredBusinessVerticalData.quarters.indexOf(period)
+      ]
+    }
+    simulatedTarget={
+      filteredBusinessVerticalData.simulatedTargetValues[
+        filteredBusinessVerticalData.quarters.indexOf(period)
+      ]
+    }
+    industryAverage={
+      filteredBusinessVerticalData.simulatedIndustryValues[
+        filteredBusinessVerticalData.quarters.indexOf(period)
+      ]
+    }
+  />
+</div>
+<TrendAnalysis
+  title=""
+  quarters={filteredBusinessVerticalData.quarters}
+  actualValues={filteredBusinessVerticalData.actualValues}
+  targetValues={filteredBusinessVerticalData.targetValues}
+  industryValues={filteredBusinessVerticalData.industryValues}
+  simulatedTargetValues={filteredBusinessVerticalData.simulatedTargetValues}
+  simulatedActualValues={filteredBusinessVerticalData.simulatedActualValues}
+  simulatedIndustryValues={filteredBusinessVerticalData.simulatedIndustryValues}
+  selectedQuarter={period}
+  metric={metric}
+  thresholds={
+    data.thresholds &&
+    data.thresholds[metric] &&
+    data.thresholds[metric][businessVerticalsCompany]
+      ? data.thresholds[metric][businessVerticalsCompany]
+      : null
+  }
+/>
   </>
 )}
 </div>

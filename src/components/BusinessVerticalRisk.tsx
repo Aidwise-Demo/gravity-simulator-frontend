@@ -903,7 +903,7 @@ const BusinessVerticalRisk = ({
                   className="absolute top-0 bottom-0"
                   style={{
                     left: `${getPositionPercentage(vertical.predictedTarget, vertical.cutoff)}%`,
-                    width: '2px',
+                    width: '4px',
                     background: POINTER_COLORS['Predefined Target'],
                     borderRadius: '2px',
                     height: '100%',

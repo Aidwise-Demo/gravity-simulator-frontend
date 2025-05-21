@@ -6,6 +6,7 @@ interface PeriodSummaryProps {
   actualValue: number;
   targetValue: number;
   simulatedTarget: number;
+  industryAverage?: number;
 }
 
 const formatValue = (value: number) => {
@@ -22,18 +23,23 @@ const PeriodSummary: React.FC<PeriodSummaryProps> = ({
   actualValue,
   targetValue,
   simulatedTarget,
+  industryAverage
 }) => {
   // Calculations
   const safeActual = isNaN(actualValue) || actualValue < 0 ? 0 : actualValue;
   const safeTarget = isNaN(targetValue) || targetValue <= 0 ? 1 : targetValue;
   const safeSimTarget = isNaN(simulatedTarget) || simulatedTarget <= 0 ? 1 : simulatedTarget;
+  const safeIndustryAvg = industryAverage === undefined || isNaN(industryAverage) ? undefined : industryAverage;
 
-  const vsPredefinedTarget = ((safeActual-safeTarget )/ safeTarget) * 100;
-  const vsSimulatedTarget = ((safeActual-safeSimTarget )/ safeSimTarget) * 100 ;
+  const vsPredefinedTarget = ((safeActual - safeTarget) / safeTarget) * 100;
+  const vsSimulatedTarget = ((safeActual - safeSimTarget) / safeSimTarget) * 100;
+  const vsIndustryAverage =
+    safeIndustryAvg !== undefined && safeIndustryAvg !== 0
+      ? ((safeActual - safeIndustryAvg) / safeIndustryAvg) * 100
+      : undefined;
 
   return (
-    <div className="rounded-lg  pr-1 flex flex-col gap-2 ">
-      {/* <div className="text-sm text-gray-500 font-medium mb-1">{period} {metric} Summary</div> */}
+    <div className="rounded-lg pr-1 flex flex-col gap-2 ">
       <div className="flex flex-col gap-1">
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-600">{period} Business Potential:  </span>
@@ -61,6 +67,21 @@ const PeriodSummary: React.FC<PeriodSummaryProps> = ({
             {vsSimulatedTarget.toFixed(1)}%
           </span>
         </div>
+        {safeIndustryAvg !== undefined && (
+          <div className="flex justify-between items-center">
+            <span className="text-xs text-gray-600">vs Projected Industry Avg:</span>
+            <span
+              className={`font-semibold ${
+                vsIndustryAverage !== undefined && vsIndustryAverage >= 0
+                  ? "text-green-600"
+                  : "text-red-600"
+              }`}
+            >
+              {vsIndustryAverage !== undefined && (vsIndustryAverage >= 0 ? "+" : "")}
+              {vsIndustryAverage !== undefined ? vsIndustryAverage.toFixed(1) : "NA"}%
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
