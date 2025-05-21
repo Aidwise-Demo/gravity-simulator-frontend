@@ -301,7 +301,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
                   y1={thresholds.ntv_low_medium}
                   y2={thresholds.ntv_medium_high}
                   strokeOpacity={0}
-                  fill="rgba(253,224,71,0.18)" // yellow-400/20
+                  fill="rgba(217, 186, 32, 0.49)" // yellow-400/20
                   ifOverflow="extendDomain"
                 />
                 {/* Red: ntv_medium_high to yMax */}
@@ -309,7 +309,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
                   y1={thresholds.ntv_medium_high}
                   y2={yMax * 1.05}
                   strokeOpacity={0}
-                  fill="rgba(239,68,68,0.13)" // red-500/15
+                  fill="rgba(239, 68, 68, 0.29)" // red-500/15
                   ifOverflow="extendDomain"
                 />
               </>
