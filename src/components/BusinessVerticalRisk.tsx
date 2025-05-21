@@ -877,6 +877,7 @@ const BusinessVerticalRisk = ({
         };
 
         return (
+          
           <div
             key={idx}
             className={`mb-16 border-x border-b border-gray-200 px-4 py-2 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}
@@ -985,7 +986,7 @@ const BusinessVerticalRisk = ({
               </div>
               {/* Status */}
               <div className="w-1/5 flex justify-end items-center gap-2 px-4">
-                <div className={`${getStatusColor(vertical.status)} w-4 h-4 rounded-full border border-gray-200 shadow-sm`}></div>
+                <div className={`${getStatusColor(vertical.status)} w-6 h-6 rounded-full border border-gray-200 shadow-sm`}></div>
               </div>
             </div>
           </div>

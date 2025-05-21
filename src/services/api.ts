@@ -1,143 +1,55 @@
 import axios from 'axios';
-
+// 
 // const API_URL = 'http://localhost:7000/api/gravity/simulation';
 const API_URL = 'https://api.gravity-simulator.aidwise.in/api/gravity/simulation';
-
-
-// Mock data in case the API fails
-const mockData = {
-  "company": "Dubai Holdings",
-  "period": "Q1 2025",
-  "industryBenchmark": "Similar Competitors",
-  "metric": "EBITDA",
-  "summary": {
-    "overallValue": 1028400000,
-    "actualValue": 772300000,
-    "targetValue": 392100000,
-    "achievementStatus": "197%"
-  },
-  "overallScore": {
-    "scorePercent": 76,
-    "targetsRatio": "2/3"
-  },
-  "trendAnalysis": {
-    "overall": {
-      "quarters": ["Q1-24", "Q2-24", "Q3-24", "Q4-24", "Q1-25"],
-      "actualValues": [7000, 7200, 6900, 7500, 7723],
-      "targetValues": [6800, 7400, 7600, 7900, 8000]
-    },
-    "businessVerticals": {
-      "quarters": ["Q1-24", "Q2-24", "Q3-24", "Q4-24", "Q1-25"],
-      "actualValues": [890, 910, 880, 920, 937],
-      "targetValues": [950, 940, 930, 940, 960],
-      "industryValues": [930, 935, 940, 945, 950]
-    }
-  },
-  "businessVerticalTargets": [
-    {
-      "name": "Real Estate",
-      "predictedTarget": 937,
-      "current": 200,
-      "currentStar": 250,
-      "industryAverage": 950,
-      "cutoff": 975,
-      "value": 937,
-      "status": "Off-Track"
-    },
-    {
-      "name": "Investments",
-      "predictedTarget": 845,
-      "current": 210,
-      "currentStar": 260,
-      "industryAverage": 940,
-      "cutoff": 970,
-      "value": 845,
-      "status": "Off-Track"
-    },
-    {
-      "name": "Entertainment",
-      "predictedTarget": 767,
-      "current": 190,
-      "currentStar": 230,
-      "industryAverage": 930,
-      "cutoff": 965,
-      "value": 767,
-      "status": "Off-Track"
-    },
-    {
-      "name": "Ejadah",
-      "predictedTarget": 243,
-      "current": 100,
-      "currentStar": 120,
-      "industryAverage": 400,
-      "cutoff": 450,
-      "value": 243,
-      "status": "Off-Track"
-    },
-    {
-      "name": "Land Estates",
-      "predictedTarget": 848,
-      "current": 200,
-      "currentStar": 240,
-      "industryAverage": 920,
-      "cutoff": 960,
-      "value": 848,
-      "status": "Off-Track"
-    },
-    {
-      "name": "Asset Management",
-      "predictedTarget": 912,
-      "current": 300,
-      "currentStar": 350,
-      "industryAverage": 900,
-      "cutoff": 950,
-      "value": 912,
-      "status": "On-Track"
-    },
-    {
-      "name": "Hospitality",
-      "predictedTarget": 812,
-      "current": 280,
-      "currentStar": 320,
-      "industryAverage": 800,
-      "cutoff": 850,
-      "value": 812,
-      "status": "On-Track"
-    }
-  ]
-};
 
 // Options for filters
 export const periodOptions = ["Q1 2024", "Q2 2024", "Q3 2024", "Q4 2024", "Q1 2025", "Q2 2025"];
 export const benchmarkOptions = ["Similar Competitors", "Industry Average", "Global Standards", "Regional Leaders"];
 export const metricOptions = ["EBITDA", "Revenue", "EBITDA Margin"];
+export const businessVerticalsCompanyOptions = ["Asset Management", "Community Management", "Entertainment", "Hospitality", "Land Estates", "Real Estate"];
 
 export interface SimulationData {
   company: string;
   period: string;
   industryBenchmark: string;
   metric: string;
+  businessVerticalsCompany?: string; // Added businessVerticalsCompany
   summary: {
     overallValue: number;
     actualValue: number;
     targetValue: number;
     achievementStatus: string;
+    newTarget?: number; // Added from the Index component
+  };
+  summary_current?: {  // Added from the Index component
+    overallValue: number;
+    actualValue: number;
+    targetValue: number;
+    achievementStatus: string;
+    newTarget?: number;
   };
   overallScore: {
     scorePercent: number;
     targetsRatio: string;
+    targetDiff?: number; // Added from the Index component
   };
   trendAnalysis: {
     overall: {
       quarters: string[];
       actualValues: number[];
       targetValues: number[];
+      simulatedTargetValues?: number[]; // Added from the Index component
+      simulatedActualValues?: number[]; // Added from the Index component
     };
     businessVerticals: {
       quarters: string[];
       actualValues: number[];
       targetValues: number[];
       industryValues?: number[];
+      simulatedTargetValues?: number[]; // Added from the Index component
+      simulatedActualValues?: number[]; // Added from the Index component
+      simulatedIndustryValues?: number[]; // Added from the Index component
     };
   };
   businessVerticalTargets: Array<{
@@ -162,6 +74,7 @@ export const fetchSimulationData = async (
   period: string = "Q1 2025", 
   benchmark: string = "Similar Competitors", 
   metric: string = "EBITDA",
+  businessVerticalsCompany: string = "Real Estate", // Added default parameter
   allBusinessVerticalTargets?: Record<string, number | BusinessVerticalTargetWithFlag>
 ): Promise<SimulationData> => {
   try {
@@ -170,7 +83,8 @@ export const fetchSimulationData = async (
       company: "Dubai Holdings",
       period,
       industryBenchmark: benchmark,
-      metric
+      metric,
+      businessVerticalsCompany // Added to payload
     };
     
     // Add all business vertical targets if provided
@@ -205,7 +119,8 @@ export const fetchSimulationData = async (
     return response.data;
   } catch (error) {
     console.error("Failed to fetch simulation data. Using mock data instead.", error);
-    return mockData as SimulationData;
+    // Note: mock data implementation would be needed here
+    throw error;
   }
 };
 
@@ -215,6 +130,7 @@ export const handleTargetChange = async (
   currentPeriod: string,
   currentBenchmark: string,
   currentMetric: string,
+  currentBusinessVerticalsCompany: string, // Added parameter
   setData: (data: SimulationData) => void
 ): Promise<void> => {
   try {
@@ -222,6 +138,7 @@ export const handleTargetChange = async (
       currentPeriod,
       currentBenchmark,
       currentMetric,
+      currentBusinessVerticalsCompany, // Added to function call
       allBusinessVerticalTargets
     );
     

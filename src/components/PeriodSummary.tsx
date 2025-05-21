@@ -36,8 +36,8 @@ const PeriodSummary: React.FC<PeriodSummaryProps> = ({
       {/* <div className="text-sm text-gray-500 font-medium mb-1">{period} {metric} Summary</div> */}
       <div className="flex flex-col gap-1">
         <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-600">{period} Business Potential: </span>
-          <span className="font-semibold">{formatValue(safeActual)}</span>
+          <span className="text-xs text-gray-600">{period} Business Potential:  </span>
+          <span className="font-semibold">  ‎ {formatValue(safeActual)}</span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-xs text-gray-600">vs Predefined Target:</span>

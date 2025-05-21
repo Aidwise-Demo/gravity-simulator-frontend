@@ -622,7 +622,8 @@ import {
   fetchSimulationData, 
   periodOptions, 
   benchmarkOptions, 
-  metricOptions, 
+  metricOptions,
+  businessVerticalsCompanyOptions, // Added import
   type SimulationData 
 } from '../services/api';
 import FilterDropdown from '../components/FilterDropdown';
@@ -631,8 +632,8 @@ import TrendAnalysis from '../components/TrendAnalysis';
 import BusinessVerticalRisk from '../components/BusinessVerticalRisk';
 import ScoreSummary from '../components/ScoreSummary';
 import SharedLegend from '../components/SharedLegend';
-import PeriodSummary from '../components/PeriodSummary';
 import { toast } from '@/components/ui/use-toast';
+import PeriodSummary from '@/components/PeriodSummary';
 
 // Define the interface for business vertical target with change flag
 interface BusinessVerticalTargetWithFlag {
@@ -644,6 +645,7 @@ const Index = () => {
   const [period, setPeriod] = useState<string>("Q1 2025");
   const [benchmark, setBenchmark] = useState<string>("Similar Competitors");
   const [metric, setMetric] = useState<string>("EBITDA");
+  const [businessVerticalsCompany, setBusinessVerticalsCompany] = useState<string>("Real Estate"); // Added state
   const [data, setData] = useState<SimulationData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [updating, setUpdating] = useState<boolean>(false);
@@ -655,7 +657,8 @@ const Index = () => {
   const handleReset = async () => {
     setIsResetting(true);
     try {
-      await loadData(period, benchmark, metric, undefined);
+      // Call API to reset simulation (no business verticals passed)
+      await loadData(period, benchmark, metric, businessVerticalsCompany, undefined);
     } catch (error) {
       console.error("Failed to reset targets", error);
     } finally {
@@ -667,6 +670,7 @@ const Index = () => {
     currentPeriod: string = period,
     currentBenchmark: string = benchmark,
     currentMetric: string = metric,
+    currentBusinessVerticalsCompany: string = businessVerticalsCompany, // Added parameter
     allBusinessVerticalTargets?: Record<string, BusinessVerticalTargetWithFlag>
   ) => {
     const isUpdate = allBusinessVerticalTargets !== undefined;
@@ -681,8 +685,24 @@ const Index = () => {
         currentPeriod, 
         currentBenchmark, 
         currentMetric,
+        currentBusinessVerticalsCompany, // Added to function call
         allBusinessVerticalTargets
       );
+      
+      // Log the entire data response
+      console.log('Full API response:', result);
+      
+      // Specifically log the business vertical trend data
+      if (result.trendAnalysis.businessVerticals) {
+        console.log('Business Vertical Trend Data:', {
+          quarters: result.trendAnalysis.businessVerticals.quarters,
+          actual: result.trendAnalysis.businessVerticals.actualValues,
+          target: result.trendAnalysis.businessVerticals.targetValues
+        });
+      } else {
+        console.warn('No businessVerticals data found in trendAnalysis');
+      }
+      
       setData(result);
     } catch (error) {
       console.error('Error fetching simulation data:', error);
@@ -698,7 +718,7 @@ const Index = () => {
         setLoading(false);
       }
     }
-  }, [period, benchmark, metric]);
+  }, [period, benchmark, metric, businessVerticalsCompany]); // Added businessVerticalsCompany to dependencies
 
   useEffect(() => {
     loadData();
@@ -706,13 +726,20 @@ const Index = () => {
 
   const handlePeriodChange = (value: string) => {
     setPeriod(value);
-    loadData(value, benchmark, metric);
-  };
+    loadData(value, benchmark, metric, businessVerticalsCompany);  };
 
   const handleBenchmarkChange = (value: string) => {
     setBenchmark(value);
-    loadData(period, value, metric);
+    loadData(period, value, metric, businessVerticalsCompany);
+    
   };
+
+    // Added handler for businessVerticalsCompany change
+
+  const handleBusinessVerticalsCompanyChange = (value: string) => {
+      setBusinessVerticalsCompany(value);
+      loadData(period, benchmark, metric, value);
+  }; 
 
   const handleMetricChange = (value: string) => {
     setMetric(value);
@@ -738,12 +765,14 @@ const Index = () => {
     period: string;
     benchmark: string;
     metric: string;
+    businessVerticalsCompany: string;
     allBusinessVerticalTargets: Record<string, BusinessVerticalTargetWithFlag>;
   }) => {
     await loadData(
       updateParams.period,
       updateParams.benchmark,
       updateParams.metric,
+      updateParams.businessVerticalsCompany, // Added to function call
       updateParams.allBusinessVerticalTargets
     );
     // Do NOT update selectedBusinessVertical here!
@@ -836,6 +865,19 @@ const Index = () => {
               options={metricOptions} 
               onChange={handleMetricChange} 
             />
+            {/* Added new dropdown for Business Vertical */}
+
+            <FilterDropdown 
+
+              label="Business Vertical" 
+
+              value={businessVerticalsCompany} 
+
+              options={businessVerticalsCompanyOptions} 
+
+              onChange={handleBusinessVerticalsCompanyChange} 
+
+            />
             <button
               onClick={handleReset}
               disabled={isResetting}
@@ -851,70 +893,68 @@ const Index = () => {
         </div>
 
         {/* Score Card and Trend Charts */}
-        <div className="flex flex-col lg:flex-row gap-2 mb-6">
-          {/* Score Card (20% width) */}
-          <div className="w-full lg:w-[20%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col h-full justify-center border border-gray-200">
-            <ScoreSummary
-              scorePercent={data.overallScore.scorePercent}
-              targetsRatio={data.overallScore.targetsRatio}
-              targetDiff={data.overallScore.targetDiff}
-              metric={metric}
-            />
-          </div>
-          {/* Trend Chart 1 (40% width) */}
-          <div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col items-start justify-center border border-gray-200 relative">
-            {/* PeriodSummary at top right */}
-            <div className="absolute top-0 right-0 z-10">
-              <PeriodSummary
-                period={period}
-                metric={metric}
-                actualValue={data.summary_current.actualValue}
-                targetValue={data.summary_current.targetValue}
-                simulatedTarget={data.summary_current.newTarget}
-              />
-            </div>
-            <TrendAnalysis 
-              title="Overall Trend Analysis"
-              quarters={data.trendAnalysis.overall.quarters}
-              actualValues={data.trendAnalysis.overall.actualValues}
-              targetValues={data.trendAnalysis.overall.targetValues}
-              simulatedTargetValues={data.trendAnalysis.overall.simulatedTargetValues}
-              simulatedActualValues={data.trendAnalysis.overall.simulatedActualValues}
-              selectedQuarter={period}
-              metric={metric}
-            />
-          </div>
-          {/* Trend Chart 2 (40% width) */}
-          <div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col items-center justify-center border border-gray-200">
-            {hasBusinessVerticalData && (
-              <>
-                <div className="flex items-center justify-between w-full mb-2">
-                  <span className="text-sm font-medium">Business Vertical Trend Analysis</span>
-                  <div className="w-48">
-                    <FilterDropdown
-                      label=""
-                      value={selectedBusinessVertical}
-                      options={businessVerticalOptions}
-                      onChange={setSelectedBusinessVertical}
-                    />
-                  </div>
-                </div>
-                <TrendAnalysis 
-                  title=""
-                  quarters={filteredBusinessVerticalData.quarters}
-                  actualValues={filteredBusinessVerticalData.actualValues}
-                  targetValues={filteredBusinessVerticalData.targetValues}
-                  industryValues={filteredBusinessVerticalData.industryValues}
-                  simulatedTargetValues={filteredBusinessVerticalData.simulatedTargetValues}
-                  simulatedActualValues={filteredBusinessVerticalData.simulatedActualValues}
-                  simulatedIndustryValues={filteredBusinessVerticalData.simulatedIndustryValues}
-                  selectedQuarter={period}
-                  metric={metric}
-                />
-              </>
-            )}
-          </div>
+        {/* Score Card and Trend Charts */}
+<div className="flex flex-col lg:flex-row gap-2 mb-6">
+  {/* Score Card (20% width) */}
+  <div className="w-full lg:w-[20%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col h-full justify-center border border-gray-200">
+    <ScoreSummary
+      scorePercent={data.overallScore.scorePercent}
+      targetsRatio={data.overallScore.targetsRatio}
+      targetDiff={data.overallScore.targetDiff}
+      metric={metric}
+    />
+  </div>
+  {/* Trend Chart 1 (40% width) */}
+  <div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col border border-gray-200 relative">
+    {/* Header with background */}
+    <div className="w-full bg-gray-50 px-4 py-2 rounded mb-4 flex items-center">
+      <span className="text-lg font-semibold text-gray-800">Overall Trend Analysis</span>
+    </div>
+    {/* PeriodSummary at top right */}
+    <div className="absolute top-0 right-0 z-10">
+      <PeriodSummary
+        period={period}
+        metric={metric}
+        actualValue={data.summary_current.actualValue}
+        targetValue={data.summary_current.targetValue}
+        simulatedTarget={data.summary_current.newTarget}
+      />
+    </div>
+    <TrendAnalysis 
+      title=""
+      quarters={data.trendAnalysis.overall.quarters}
+      actualValues={data.trendAnalysis.overall.actualValues}
+      targetValues={data.trendAnalysis.overall.targetValues}
+      simulatedTargetValues={data.trendAnalysis.overall.simulatedTargetValues}
+      simulatedActualValues={data.trendAnalysis.overall.simulatedActualValues}
+      selectedQuarter={period}
+      metric={metric}
+    />
+  </div>
+  {/* Trend Chart 2 (40% width) */}
+  <div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col border border-gray-200 relative">
+    {hasBusinessVerticalData && (
+      <>
+        {/* Header with background */}
+        <div className="w-full bg-gray-50 px-4 py-2 rounded mb-4 flex items-center">
+          <span className="text-lg font-semibold text-gray-800">Business Vertical Trend Analysis</span>
         </div>
+        <TrendAnalysis 
+          title=""
+          quarters={filteredBusinessVerticalData.quarters}
+          actualValues={filteredBusinessVerticalData.actualValues}
+          targetValues={filteredBusinessVerticalData.targetValues}
+          industryValues={filteredBusinessVerticalData.industryValues}
+          simulatedTargetValues={filteredBusinessVerticalData.simulatedTargetValues}
+          simulatedActualValues={filteredBusinessVerticalData.simulatedActualValues}
+          simulatedIndustryValues={filteredBusinessVerticalData.simulatedIndustryValues}
+          selectedQuarter={period}
+          metric={metric}
+        />
+      </>
+    )}
+  </div>
+</div>
         <SharedLegend />
         {/* Lower Section - Business Vertical Risk */}
         <div className="mt-4">
