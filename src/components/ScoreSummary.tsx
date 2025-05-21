@@ -6,6 +6,7 @@ interface ScoreSummaryProps {
   targetDiff: number;
   actual_target: number;
   metric: string;
+  period: string;
 }
 
 // Format function for number values
@@ -45,52 +46,52 @@ const ScoreSummary = ({
   targetDiff,
   actual_target,
   metric,
+  period
 }: ScoreSummaryProps) => {
   const formattedScore = formatValue(scorePercent);
   const formattedTargetDiff = formatValue(Math.abs(targetDiff));
-  const isPositive =actual_target-scorePercent >= 0;
+  const isPositive = actual_target - scorePercent >= 0;
 
   return (
-    <div className="p-6 rounded-xl bg-white shadow-md ">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">{metric} Target Overview</h3>
-      
-      <div className="mb-4 pb-4 ">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-600">Predefined Target:</span>
-          <div className="flex items-center">
-            <span className="font-bold text-gray-800">{formatValue(actual_target)}</span>
-            <InfoIcon tooltip="Projected target set for the current period." />
-          </div>
+  <div className="p-2 rounded-xl bg-white">
+    <h3 className="text-m font-semibold text-gray-800 mb-4">{metric} Target Overview {period}</h3>
+    
+    <div className="mb-4 pb-4 ">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-sm font-medium text-gray-600">Predefined Target:</span>
+        <div className="flex items-center">
+          <span className="font-bold text-gray-800">{formatValue(actual_target)}</span>
+          <InfoIcon tooltip="Projected target set for the current period." />
         </div>
-        
-        {formatValue(actual_target) !== formattedScore && (
-          <>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-sm font-medium text-gray-600">Simulated Target:</span>
-              <div className="flex items-center">
-                <span className="font-bold text-gray-800">{formattedScore}</span>
-                <InfoIcon tooltip="Value set by the simulator (slider)." />
-              </div>
-            </div>
-            <div className={`text-sm text-right ${isPositive ? 'text-red-600' : 'text-green-600'} flex items-center justify-end`}>
-              <span>{isPositive ? '↓' : '↑'}</span>
-              <span className="ml-1">{formattedTargetDiff}% vs Predefined</span>
-            </div>
-          </>
-        )}
       </div>
       
-      <div className="text-center">
-        <div className="mb-2">
-          <div className="text-3xl font-bold text-blue-600">{targetsRatio}</div>
-          <div className="text-sm font-medium text-gray-600 mt-1">Business verticals</div>
-        </div>
-        <div className="mt-3 py-2 px-3 bg-red-50 rounded-lg">
-          <div className="text-sm font-semibold text-red-700">Face High Target Achievement Risk</div>
-        </div>
+      {formatValue(actual_target) !== formattedScore && (
+        <>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-sm font-medium text-gray-600">Simulated Target:</span>
+            <div className="flex items-center">
+              <span className="font-bold text-gray-800">{formattedScore}</span>
+              <InfoIcon tooltip="Value set by the simulator (slider)." />
+            </div>
+          </div>
+          <div className={`text-sm text-right ${isPositive ? 'text-red-600' : 'text-green-600'} flex items-center justify-end`}>
+            <span>{isPositive ? '↓' : '↑'}</span>
+            <span className="ml-1">{formattedTargetDiff}% vs Predefined</span>
+          </div>
+        </>
+      )}
+    </div>
+    
+    <div className="text-center">
+      <div className="mb-2">
+        <div className="text-3xl font-bold text-blue-600">{targetsRatio}</div>
+        <div className="text-sm font-medium text-gray-600 mt-1">Business verticals</div>
+      </div>
+      <div className="mt-3 py-2 px-3 bg-red-50 rounded-lg">
+        <div className="text-sm font-semibold text-red-700">Face High Target <br/> Achievement Risk</div>
       </div>
     </div>
-  );
-};
-
+  </div>
+);
+}
 export default ScoreSummary;

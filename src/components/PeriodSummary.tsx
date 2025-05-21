@@ -39,52 +39,38 @@ const PeriodSummary: React.FC<PeriodSummaryProps> = ({
       : undefined;
 
   return (
-    <div className="rounded-lg pr-1 flex flex-col gap-2 ">
-      <div className="flex flex-col gap-1">
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-600">{period} Business Potential:  </span>
-          <span className="font-semibold">  ‎ {formatValue(safeActual)}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-600">vs Predefined Target:</span>
-          <span
-            className={`font-semibold ${
-              vsPredefinedTarget >= 0 ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {vsPredefinedTarget >= 0 ? "+" : ""}
-            {vsPredefinedTarget.toFixed(1)}%
-          </span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-600">vs Simulated Target:</span>
-          <span
-            className={`font-semibold ${
-              vsSimulatedTarget >= 0 ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {vsSimulatedTarget >= 0 ? "+" : ""}
-            {vsSimulatedTarget.toFixed(1)}%
-          </span>
-        </div>
-        {safeIndustryAvg !== undefined && (
-          <div className="flex justify-between items-center">
-            <span className="text-xs text-gray-600">vs Projected Industry Avg:</span>
-            <span
-              className={`font-semibold ${
-                vsIndustryAverage !== undefined && vsIndustryAverage >= 0
-                  ? "text-green-600"
-                  : "text-red-600"
-              }`}
-            >
-              {vsIndustryAverage !== undefined && (vsIndustryAverage >= 0 ? "+" : "")}
-              {vsIndustryAverage !== undefined ? vsIndustryAverage.toFixed(1) : "NA"}%
-            </span>
-          </div>
-        )}
+  <div className="rounded-lg pr-1 flex flex-col gap-2 ">
+    <div className="flex flex-col gap-1">
+      <div className="flex justify-between items-center">
+        <span className="text-xs text-gray-600">{period} Business Potential:  </span>
+        <span className="text-xs text-gray-600">{formatValue(safeActual)}</span>
       </div>
+      <div className="flex justify-between items-center">
+        <span className="text-xs text-gray-600">vs Predefined Target:</span>
+        <span className="text-xs text-gray-600">
+          {vsPredefinedTarget >= 0 ? "+" : ""}
+          {vsPredefinedTarget.toFixed(1)}%
+        </span>
+      </div>
+      <div className="flex justify-between items-center">
+        <span className="text-xs text-gray-600">vs Simulated Target:</span>
+        <span className="text-xs text-gray-600">
+          {vsSimulatedTarget >= 0 ? "+" : ""}
+          {vsSimulatedTarget.toFixed(1)}%
+        </span>
+      </div>
+      {safeIndustryAvg !== undefined && (
+        <div className="flex justify-between items-center">
+          <span className="text-xs text-gray-600">vs Projected Industry Avg:</span>
+          <span className="text-xs text-gray-600">
+            {vsIndustryAverage !== undefined && (vsIndustryAverage >= 0 ? "+" : "")}
+            {vsIndustryAverage !== undefined ? vsIndustryAverage.toFixed(1) : "NA"}%
+          </span>
+        </div>
+      )}
     </div>
-  );
-};
+  </div>
+);
+}
 
 export default PeriodSummary;

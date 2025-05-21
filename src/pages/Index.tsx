@@ -896,23 +896,24 @@ const Index = () => {
         {/* Score Card and Trend Charts */}
 <div className="flex flex-col lg:flex-row gap-2 mb-6">
   {/* Score Card (20% width) */}
-  <div className="w-full lg:w-[20%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col h-full justify-center border border-gray-200 h-[380px]">
+  <div className="w-full lg:w-[20%] rounded-lg bg-white overflow-hidden flex flex-col h-[380px] border border-gray-200">
     <ScoreSummary
       scorePercent={data.overallScore.scorePercent}
       targetsRatio={data.overallScore.targetsRatio}
       targetDiff={data.overallScore.targetDiff}
       actual_target={data.overallScore.actual_target}
       metric={metric}
+      period={period}
     />
   </div>
   {/* Trend Chart 1 (40% width) */}
-  <div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col border border-gray-200 relative h-[380px]">
+  <div className="w-full lg:w-[40%] rounded-lg bg-white overflow-hidden flex flex-col h-[380px] border border-gray-200 relative">
     {/* Header with background */}
     <div className="w-full bg-gray-50 px-4 py-2 rounded mb-4 flex items-center">
       <span className="text-lg font-semibold text-gray-800">Overall Trend Analysis</span>
     </div>
     {/* PeriodSummary at top right */}
-    <div className="absolute top-0 right-0 z-10">
+    <div className="absolute top-1 right-1 z-10">
       <PeriodSummary
         period={period}
         metric={metric}
@@ -934,7 +935,7 @@ const Index = () => {
   </div>
   {/* Trend Chart 2 (40% width) */}
   {/* Trend Chart 2 (40% width) */}
-<div className="w-full lg:w-[40%] rounded-lg shadow-md bg-white overflow-hidden p-4 flex flex-col border border-gray-200 relative h-[380px]">
+<div className="w-full lg:w-[40%] rounded-lg bg-white overflow-hidden flex flex-col h-[380px] border border-gray-200 relative">
   {hasBusinessVerticalData && (
   <>
     {/* Header with background */}
@@ -942,7 +943,7 @@ const Index = () => {
       <span className="text-lg font-semibold text-gray-800">Business Vertical Trend Analysis</span>
     </div>
     {/* PeriodSummary for Business Vertical */}
-<div className="absolute top-0 right-0 z-10">
+<div className="absolute top-1 right-1 z-10">
   <PeriodSummary
     period={period}
     metric={metric}

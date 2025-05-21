@@ -594,7 +594,7 @@ const POINTER_COLORS = {
   Target: '#ec4899', // Tailwind pink-500
   'Simulated Target': '#ec4899', // Orange for simulated target
   'Baseline Projection': '#6366f1', // Tailwind indigo-500
-  'Business Potential': '#3182ce', // Tailwind blue-600
+  'Business Potential': '#007cf0', // Tailwind blue-600
   'Projected Industry Average': '#64748b', // Tailwind slate-500
   'cut-off': '#140ddb', // Custom cyan-500
   'Predefined Target': '#ec4899', // Use pink for predefined target line
