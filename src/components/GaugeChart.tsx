@@ -227,7 +227,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
   const centerX = 100;
   const centerY = 100;
   const radius = 78;
-  const strokeWidth = 18;
+  const strokeWidth = 13;
   const simulatedAchievement = ((safeNewTarget - safeActual) / safeNewTarget) * 100;
   const simulatedArrowUp = simulatedAchievement >= 100;
   const simulatedArrowColor = simulatedArrowUp ? "#10b981" : "#ef4444";
@@ -254,7 +254,7 @@ const GaugeChart: React.FC<GaugeChartProps> = ({
             <text x="10" y="15" textAnchor="middle" fontSize="12" fill="white">i</text>
           </svg>
           <div className="absolute left-1/2 -translate-x-1/2 mt-2 w-64 p-2 text-xs bg-gray-700 text-white rounded shadow-lg opacity-0 group-hover:opacity-100 transition pointer-events-none z-50">
-            Realistic EBITDA estimate is based on the most realistic, risk-adjusted view across verticals — taking the minimum of target or business potential per business unit.
+            Realistic {metric} estimate is based on the most realistic, risk-adjusted view across verticals — taking the minimum of target or business potential per business unit.
           </div>
         </span>
       </div>
