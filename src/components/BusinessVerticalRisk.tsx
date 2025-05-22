@@ -742,49 +742,7 @@ const BusinessVerticalRisk = ({
 >
   Business Vertical Targets - Risk Assessment & Scenario Analysis
 </h2>
-      {/* Legend */}
-      <div className="flex flex-wrap gap-2 text-xs mb-3 items-center relative p-2 bg-gray-50 border border-gray-200 rounded-lg">
-        {/* Predefined Target as thin line */}
-        <div className="flex items-center space-x-1">
-          <div className="w-0.5 h-4 rounded-full" style={{ background: POINTER_COLORS['Predefined Target'] }} />
-          <span>Predefined Target</span>
-        </div>
-        {/* Simulated Target bar */}
-        <div className="flex items-center space-x-1">
-          <div className="w-1 h-4 rounded-full" style={{ background: POINTER_COLORS['Simulated Target'] }} />
-          <span>Simulated Target</span>
-        </div>
-        {['Baseline Projection', 'Business Potential', 'Projected Industry Average', 'cut-off'].map((label) => (
-          <div key={label} className="flex items-center space-x-1">
-            <svg className="w-3 h-3" viewBox="0 0 24 24">
-              <path d="M12 2L6 14h12z" fill={POINTER_COLORS[label]} />
-            </svg>
-            <span>
-              {label === 'cut-off'
-                ? 'Cut-off'
-                : label.replace('Projected Industry Average', 'Projected Industry Average').replace('Baseline Projection', 'Baseline Projection').replace('Business Potential', 'Business Potential')}
-            </span>
-          </div>
-        ))}
-        {/* Info icon with tooltip */}
-        <div className="group relative ml-2 cursor-pointer">
-          <svg
-            className="w-4 h-4 text-gray-500 hover:text-gray-700"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-          </svg>
-          <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-2 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
-            <div><strong>Predefined Target</strong>: Projected target set for the current period.</div>
-            <div><strong>Simulated Target</strong>: Value set by the simulator (slider).</div>
-            <div><strong>Baseline Value</strong>: Actual performance for the current period.</div>
-            <div><strong>Potential Value</strong>: Adjusted or estimated current value.</div>
-            <div><strong>Industry Avg.</strong>: Benchmark average across similar companies.</div>
-            <div><strong>Cut-off</strong>: Maximum allowed threshold or upper bound for simulation.</div>
-          </div>
-        </div>
-      </div>
+   
 
       {/* Table Header */}
       <div className="flex w-full text-xs font-medium mb-2 px-2 py-1 bg-gray-100 border border-gray-200 rounded-t-lg">
@@ -888,7 +846,7 @@ const BusinessVerticalRisk = ({
         return (
           <div
             key={idx}
-            className={`mb-10 border-x border-b border-gray-200 px-2 py-1 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}
+            className={`mb-9 border-x border-b border-gray-200 px-2 py-1 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}
           >
             <div className="flex mb-1">
               {/* Business Vertical */}

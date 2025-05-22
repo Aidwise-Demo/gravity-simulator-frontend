@@ -1009,7 +1009,6 @@
 // };
 
 // export default Index;
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { 
   fetchSimulationData, 
@@ -1024,6 +1023,9 @@ import GaugeChart from '../components/GaugeChart';
 import TrendAnalysis from '../components/TrendAnalysis';
 import BusinessVerticalRisk from '../components/BusinessVerticalRisk';
 import ScoreSummary from '../components/ScoreSummary';
+// import score_summary_2 from '../components/score_summary_2';
+import ScoreSummary2 from '../components/score_summary_2';
+
 import SharedLegend from '../components/SharedLegend';
 import { toast } from '@/components/ui/use-toast';
 import PeriodSummary from '@/components/PeriodSummary';
@@ -1216,12 +1218,6 @@ const Index = () => {
               options={metricOptions} 
               onChange={handleMetricChange} 
             />
-            {/* <FilterDropdown 
-              label="Business Vertical" 
-              value={businessVerticalsCompany} 
-              options={businessVerticalsCompanyOptions} 
-              onChange={handleBusinessVerticalsCompanyChange} 
-            /> */}
             <button
               onClick={handleReset}
               disabled={isResetting}
@@ -1241,20 +1237,20 @@ const Index = () => {
           {/* Left Side: 40% */}
           <div className="w-full lg:w-[40%] flex flex-col gap-2" style={{ height: `${totalPanelHeight}px` }}>
             {/* Score Card */}
-            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 h-20">
+            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 h-20 min-w-[260px] max-w-full">
               <ScoreSummary
                 scorePercent={data.overallScore.scorePercent}
-                targetsRatio={data.overallScore.targetsRatio}
+                targetsRatio={data.overallScore.actual_target_risk_ratio}
                 targetDiff={data.overallScore.targetDiff}
                 actual_target={data.overallScore.actual_target}
                 metric={metric}
                 period={period}
-            previuos_quarter_actual={data.summary.actualValue}
-          previuos_quarter_target={data.summary.targetValue}
+                previuos_quarter_actual={data.summary.actualValue}
+                previuos_quarter_target={data.summary.targetValue}
               />
             </div>
             {/* Overall Trend Analysis */}
-               <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
+            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
               <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center">
                 <span className="text-[14px] font-semibold text-gray-800">Overall Trend Analysis</span>
               </div>
@@ -1281,19 +1277,19 @@ const Index = () => {
             </div>
             {/* Business Vertical Trend Analysis */}
             <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
-<div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center justify-between">
-  <span className="text-[14px] font-medium text-gray-800">
-    Business Vertical Trend Analysis
-  </span>
-  <div className="border border-gray-700 rounded shadow-sm">
-    <FilterDropdown
-      label=""
-      value={businessVerticalsCompany}
-      options={businessVerticalsCompanyOptions}
-      onChange={handleBusinessVerticalsCompanyChange}
-    />
-  </div>
-</div>
+              <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center justify-between">
+                <span className="text-[14px] font-medium text-gray-800">
+                  Business Vertical Trend Analysis
+                </span>
+                <div className="border border-gray-700 rounded shadow-sm">
+                  <FilterDropdown
+                    label=""
+                    value={businessVerticalsCompany}
+                    options={businessVerticalsCompanyOptions}
+                    onChange={handleBusinessVerticalsCompanyChange}
+                  />
+                </div>
+              </div>
               {/* Move PeriodSummary below the heading */}
               <div className="px-4 pb-2">
                 <PeriodSummary
@@ -1343,17 +1339,22 @@ const Index = () => {
             </div>
           </div>
           {/* Right Side: 60% */}
-          <div className="w-full lg:w-[60%] relative flex flex-col justify-end" style={{ height: `${totalPanelHeight}px` }}>
-            {/* Add SimulatedTargetSummary at the top right */}
-            <div className="absolute top-2 right-2 z-10">
-              {data.overallScore.scorePercent !== data.overallScore.actual_target && (
-                <SimulatedTargetSummary
-                  simulatedValue={data.overallScore.scorePercent}
-                  predefinedValue={data.overallScore.actual_target}
-                />
-              )}
+            <div className="w-full lg:w-[60%] flex flex-col gap-2" style={{ height: `${totalPanelHeight}px` }}>
+            {/* Score Card (same width as left) */}
+            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 h-20 min-w-[260px] max-w-full">
+              <ScoreSummary2
+                scorePercent={data.overallScore.scorePercent}
+                targetsRatio={data.overallScore.targetsRatio}
+                targetDiff={data.overallScore.targetDiff}
+                actual_target={data.overallScore.actual_target}
+                metric={metric}
+                period={period}
+                previuos_quarter_actual={data.summary.actualValue}
+                previuos_quarter_target={data.summary.targetValue}
+              />
             </div>
-            <div className="h-full flex flex-col">
+            {/* Simulator Table (BusinessVerticalRisk) with increased height and no scroll */}
+            <div className="flex flex-col" style={{ height: '469px' /* 230+230+16-20 (score card height) */ }}>
               <BusinessVerticalRisk
                 verticals={data.businessVerticalTargets}
                 period={period}
