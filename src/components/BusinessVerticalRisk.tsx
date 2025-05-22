@@ -762,7 +762,7 @@ const BusinessVerticalRisk = ({
             <span>
               {label === 'cut-off'
                 ? 'Cut-off'
-                : label.replace('Projected Industry Average', 'Industry Avg.').replace('Baseline Projection', 'Baseline').replace('Business Potential', 'Potential')}
+                : label.replace('Projected Industry Average', 'Projected Industry Average').replace('Baseline Projection', 'Baseline Projection').replace('Business Potential', 'Business Potential')}
             </span>
           </div>
         ))}
