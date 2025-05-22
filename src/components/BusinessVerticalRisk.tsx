@@ -584,20 +584,19 @@ import { fetchSimulationData } from '@/services/api'; // Adjust path if needed
 // Triangle pointer (no tooltip here, tooltip will be on the bar/slider group)
 const TrianglePointer = ({ colorClass }) => (
   <div className="flex flex-col items-center relative">
-    <svg className="w-7 h-7" viewBox="0 0 24 24">
+    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
       <path d="M12 2L6 14h12z" fill={colorClass} />
     </svg>
   </div>
 );
 
 const POINTER_COLORS = {
-  Target: '#ec4899', // Tailwind pink-500
-  'Simulated Target': '#ec4899', // Orange for simulated target
+  'Predefined Target': '#ec4899', // Tailwind pink-500
+  'Simulated Target': '#ec4899',
   'Baseline Projection': '#6366f1', // Tailwind indigo-500
   'Business Potential': '#007cf0', // Tailwind blue-600
   'Projected Industry Average': '#64748b', // Tailwind slate-500
   'cut-off': '#140ddb', // Custom cyan-500
-  'Predefined Target': '#ec4899', // Use pink for predefined target line
 };
 
 const BusinessVerticalRisk = ({
@@ -735,34 +734,40 @@ const BusinessVerticalRisk = ({
   };
 
   return (
-    
     <div className="w-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
+      {/* Title */}
+   <h2
+  className="font-medium text-[14px] mb-2"
+  style={{ color: "#006666" }}
+>
+  Business Vertical Targets - Risk Assessment & Scenario Analysis
+</h2>
       {/* Legend */}
-           <h2 className="text-blue-600 font-medium text-lg">
-          Business Vertical Targets - Risk Assessment & Scenario Analysis
-        </h2>
-      <div className="flex gap-6 text-sm mb-5 items-center relative p-3 bg-gray-50 border border-gray-200 rounded-lg">
+      <div className="flex flex-wrap gap-2 text-xs mb-3 items-center relative p-2 bg-gray-50 border border-gray-200 rounded-lg">
         {/* Predefined Target as thin line */}
-        <div className="flex items-center space-x-2">
-          <div className="w-0.5 h-5 rounded-full" style={{ background: POINTER_COLORS['Predefined Target'] }} />
+        <div className="flex items-center space-x-1">
+          <div className="w-0.5 h-4 rounded-full" style={{ background: POINTER_COLORS['Predefined Target'] }} />
           <span>Predefined Target</span>
         </div>
-        {/* Simulated Target triangle */}
-          <div className="flex items-center space-x-2">
-          <div className="w-1.5 h-5 rounded-full" style={{ background: POINTER_COLORS['Simulated Target'] }} />
+        {/* Simulated Target bar */}
+        <div className="flex items-center space-x-1">
+          <div className="w-1 h-4 rounded-full" style={{ background: POINTER_COLORS['Simulated Target'] }} />
           <span>Simulated Target</span>
         </div>
-   
         {['Baseline Projection', 'Business Potential', 'Projected Industry Average', 'cut-off'].map((label) => (
-          <div key={label} className="flex items-center space-x-2">
-            <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+          <div key={label} className="flex items-center space-x-1">
+            <svg className="w-3 h-3" viewBox="0 0 24 24">
               <path d="M12 2L6 14h12z" fill={POINTER_COLORS[label]} />
             </svg>
-          <span>{label === 'cut-off' ? 'Cut-off' : label}</span>
+            <span>
+              {label === 'cut-off'
+                ? 'Cut-off'
+                : label.replace('Projected Industry Average', 'Industry Avg.').replace('Baseline Projection', 'Baseline').replace('Business Potential', 'Potential')}
+            </span>
           </div>
         ))}
         {/* Info icon with tooltip */}
-        <div className="group relative ml-4 cursor-pointer">
+        <div className="group relative ml-2 cursor-pointer">
           <svg
             className="w-4 h-4 text-gray-500 hover:text-gray-700"
             fill="currentColor"
@@ -770,22 +775,22 @@ const BusinessVerticalRisk = ({
           >
             <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
           </svg>
-          <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
+          <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-2 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
             <div><strong>Predefined Target</strong>: Projected target set for the current period.</div>
             <div><strong>Simulated Target</strong>: Value set by the simulator (slider).</div>
-            <div><strong>Baseline Projection</strong>: Actual performance for the current period.</div>
-            <div><strong>Business Potential</strong>: Adjusted or estimated current value.</div>
-            <div><strong>Projected Industry Average</strong>: Benchmark average across similar companies.</div>
+            <div><strong>Baseline Value</strong>: Actual performance for the current period.</div>
+            <div><strong>Potential Value</strong>: Adjusted or estimated current value.</div>
+            <div><strong>Industry Avg.</strong>: Benchmark average across similar companies.</div>
             <div><strong>Cut-off</strong>: Maximum allowed threshold or upper bound for simulation.</div>
           </div>
         </div>
       </div>
 
       {/* Table Header */}
-     <div className="flex w-full text-sm font-medium mb-5 px-4 py-2 bg-gray-100 border border-gray-200 rounded-t-lg">
-        <div className="w-1/4 px-4">Business Verticals</div>
+      <div className="flex w-full text-xs font-medium mb-2 px-2 py-1 bg-gray-100 border border-gray-200 rounded-t-lg">
+        <div className="w-1/4 px-2">Business Verticals</div>
         <div className="w-2/5 text-center">Target Simulator</div>
-        <div className="w-1/5 flex justify-end items-center gap-2 px-4">
+        <div className="w-1/5 flex justify-end items-center gap-1 px-2">
           Status
           {/* Info icon for Status */}
           <span className="group relative ml-1 cursor-pointer">
@@ -796,7 +801,7 @@ const BusinessVerticalRisk = ({
             >
               <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
             </svg>
-            <div className="absolute right-0 mt-2 w-[340px] p-3 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-line">
+            <div className="absolute right-0 mt-2 w-[300px] p-2 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-line">
               <div><b>1. Gap Calculations:</b></div>
               <div>gap_curr = (new_target_value - Predicted_Actual_Value) / Cut_off_value</div>
               <div>gap_expected = (new_target_value - current*) / Cut_off_value</div>
@@ -858,20 +863,20 @@ const BusinessVerticalRisk = ({
               <span className="font-semibold">Predefined Target:</span>
               <span>{formatValue(vertical.predictedTarget)}</span>
             </div>
-                        <div className="flex items-center gap-2 mb-1">
+            <div className="flex items-center gap-2 mb-1">
               <span className="inline-block w-1 h-4 rounded-full" style={{ background: POINTER_COLORS['Simulated Target'] }}></span>
               <span className="font-semibold">Simulated Target:</span>
               <span>{formatValue(simulatedTargetValue)}</span>
             </div>
-     {pointerData
-  .filter(ptr => ptr.key !== 'simulatedTarget') // Remove Simulated Target from triangle pointers
-  .map(ptr => (
-    <div key={ptr.key} className="flex items-center gap-2 mb-1 last:mb-0">
-      <TrianglePointer colorClass={ptr.color} />
-      <span className="font-semibold">{ptr.label}:</span>
-      <span>{formatValue(ptr.value)}</span>
-    </div>
-  ))}
+            {pointerData
+              .filter(ptr => ptr.key !== 'simulatedTarget')
+              .map(ptr => (
+                <div key={ptr.key} className="flex items-center gap-2 mb-1 last:mb-0">
+                  <TrianglePointer colorClass={ptr.color} />
+                  <span className="font-semibold">{ptr.label}:</span>
+                  <span>{formatValue(ptr.value)}</span>
+                </div>
+              ))}
           </div>
         );
 
@@ -881,14 +886,13 @@ const BusinessVerticalRisk = ({
         };
 
         return (
-          
           <div
             key={idx}
-            className={`mb-16 border-x border-b border-gray-200 px-4 py-2 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}
+            className={`mb-6 border-x border-b border-gray-200 px-2 py-1 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}
           >
-            <div className="flex mb-2">
+            <div className="flex mb-1">
               {/* Business Vertical */}
-              <div className="text-sm font-medium w-1/4 px-4 flex items-center">{vertical.name}</div>
+              <div className="text-xs font-medium w-1/4 px-2 flex items-center">{vertical.name}</div>
               {/* Simulator */}
               <div
                 className="w-2/5 relative flex items-center group"
@@ -897,7 +901,7 @@ const BusinessVerticalRisk = ({
                 onMouseMove={hoveredIdx === idx ? handleMouseMove : undefined}
                 style={{ cursor: 'pointer' }}
               >
-                <div className="w-full h-1.5 bg-indigo-500 rounded-full my-4"></div>
+                <div className="w-full h-1.5 bg-indigo-500 rounded-full my-2"></div>
                 {/* Predefined Target as a thin pink line */}
                 <div
                   className="absolute top-0 bottom-0"
@@ -916,7 +920,7 @@ const BusinessVerticalRisk = ({
                   className="absolute"
                   style={{
                     left: `${getPositionPercentage(simulatedTargetValue, vertical.cutoff)}%`,
-                    top: '20px',
+                    top: '16px',
                     transform: 'translateX(-50%)',
                     zIndex: 25,
                   }}
@@ -925,7 +929,7 @@ const BusinessVerticalRisk = ({
                 </div>
                 {/* Target draggable marker */}
                 <div
-                  className="absolute h-12 w-2 bg-pink-600 cursor-move -top-4 z-30 shadow-sm rounded-sm"
+                  className="absolute h-10 w-2 bg-pink-600 cursor-move -top-4 z-30 shadow-sm rounded-sm"
                   style={{
                     left: `${getPositionPercentage(simulatedTargetValue, vertical.cutoff)}%`,
                     transform: 'translateX(-50%)'
@@ -954,7 +958,7 @@ const BusinessVerticalRisk = ({
                   }}
                 >
                   <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 whitespace-nowrap">
-                    <div className="bg-pink-600 text-white text-xs px-2 py-1 rounded shadow-sm border border-pink-700">
+                    <div className="bg-pink-600 text-white text-[10px] px-2 py-1 rounded shadow-sm border border-pink-700">
                       {formatValue(simulatedTargetValue)}
                     </div>
                   </div>
@@ -967,7 +971,7 @@ const BusinessVerticalRisk = ({
                       className="absolute"
                       style={{
                         left: `${getPositionPercentage(vertical[key], vertical.cutoff)}%`,
-                        top: '20px',
+                        top: '16px',
                         transform: 'translateX(-50%)'
                       }}
                     >
@@ -989,8 +993,8 @@ const BusinessVerticalRisk = ({
                 )}
               </div>
               {/* Status */}
-              <div className="w-1/5 flex justify-end items-center gap-2 px-4">
-                <div className={`${getStatusColor(vertical.status)} w-6 h-6 rounded-full border border-gray-200 shadow-sm`}></div>
+              <div className="w-1/5 flex justify-end items-center gap-1 px-2">
+                <div className={`${getStatusColor(vertical.status)} w-4 h-4 rounded-full border border-gray-200 shadow-sm`}></div>
               </div>
             </div>
           </div>

@@ -42,27 +42,27 @@ const PeriodSummary: React.FC<PeriodSummaryProps> = ({
   <div className="rounded-lg pr-1 flex flex-col gap-2 ">
     <div className="flex flex-col gap-1">
       <div className="flex justify-between items-center">
-        <span className="text-xs text-gray-600">{period} Business Potential:  </span>
-        <span className="text-xs text-gray-600">{formatValue(safeActual)}</span>
+        <span className="text-[10px] text-gray-600">{period} Business Potential:  </span>
+        <span className="text-[10px] text-gray-600">{formatValue(safeActual)}</span>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-xs text-gray-600">vs Predefined Target:</span>
-        <span className="text-xs text-gray-600">
+        <span className="text-[10px] text-gray-600">vs Predefined Target:</span>
+        <span className="text-[10px] text-gray-600">
           {vsPredefinedTarget >= 0 ? "+" : ""}
           {vsPredefinedTarget.toFixed(1)}%
         </span>
       </div>
       <div className="flex justify-between items-center">
-        <span className="text-xs text-gray-600">vs Simulated Target:</span>
-        <span className="text-xs text-gray-600">
+        <span className="text-[10px] text-gray-600">vs Simulated Target:</span>
+        <span className="text-[10px] text-gray-600">
           {vsSimulatedTarget >= 0 ? "+" : ""}
           {vsSimulatedTarget.toFixed(1)}%
         </span>
       </div>
       {safeIndustryAvg !== undefined && (
         <div className="flex justify-between items-center">
-          <span className="text-xs text-gray-600">vs Projected Industry Avg:</span>
-          <span className="text-xs text-gray-600">
+          <span className="text-[10px] text-gray-600">vs Projected Industry Avg:</span>
+          <span className="text-[10px] text-gray-600">
             {vsIndustryAverage !== undefined && (vsIndustryAverage >= 0 ? "+" : "")}
             {vsIndustryAverage !== undefined ? vsIndustryAverage.toFixed(1) : "NA"}%
           </span>

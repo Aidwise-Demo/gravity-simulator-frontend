@@ -1,9 +1,9 @@
 import React from 'react';
 
 const Navbar = () => (
-  <nav className="w-full flex items-center justify-between px-6 py-3 bg-blue-900 shadow">
+<nav className="w-full flex items-center justify-between px-6 py-3 shadow" style={{ background: "#006666" }}>
     <div className="flex items-center">
-      <h1 className="text-2xl font-bold text-white">
+      <h1 className="text-[24px] font-bold text-white">
         Target Simulator for Key Metrics
       </h1>
     </div>
