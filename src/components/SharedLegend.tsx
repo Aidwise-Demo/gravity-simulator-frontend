@@ -8,6 +8,9 @@ const RISK_COLORS = {
 
 const SharedLegend = () => (
   <div className="flex flex-wrap gap-4 justify-end py-2 pr-5 border-t border-gray-200 bg-gray-50">
+        <RiskLegend color={RISK_COLORS["Low-Risk"]} label="Low-Risk" />
+    <RiskLegend color={RISK_COLORS["Medium-Risk"]} label="Medium-Risk" />
+    <RiskLegend color={RISK_COLORS["High-Risk"]} label="High-Risk" />
     <LegendItem color="#3182ce" label="Actual" />
     <LegendItem color="#3182ce" label="Business Potential" dashed />
     <LegendItem color="#9e38a1" label="Predefined Target" />
@@ -15,9 +18,9 @@ const SharedLegend = () => (
     <LegendItem color="#64748b" label="Industry Average" />
     <LegendItem color="#64748b" label="Projected Industry Average" dashed />
     {/* Risk Legends */}
-    <RiskLegend color={RISK_COLORS["Low-Risk"]} label="Low-Risk" />
-    <RiskLegend color={RISK_COLORS["Medium-Risk"]} label="Medium-Risk" />
-    <RiskLegend color={RISK_COLORS["High-Risk"]} label="High-Risk" />
+<RiskLegend color="#22c55e" label="Low-Risk" />      {/* Tailwind bg-green-500 */}
+    <RiskLegend color="#eab308" label="Medium-Risk" />   {/* Tailwind bg-yellow-500 */}
+    <RiskLegend color="#ef4444" label="High-Risk" />     {/* Tailwind bg-red-500 */}
   </div>
 );
 
