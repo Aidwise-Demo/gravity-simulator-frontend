@@ -734,7 +734,7 @@ const BusinessVerticalRisk = ({
   };
 
   return (
-    <div className="w-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
+    <div className="w-full h-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
       {/* Title */}
    <h2
   className="font-medium text-[14px] mb-2"
@@ -888,7 +888,7 @@ const BusinessVerticalRisk = ({
         return (
           <div
             key={idx}
-            className={`mb-6 border-x border-b border-gray-200 px-2 py-1 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}
+            className={`mb-10 border-x border-b border-gray-200 px-2 py-1 ${idx % 2 === 0 ? 'bg-gray-50' : 'bg-white'} ${idx === verticals.length - 1 ? 'rounded-b-lg' : ''}`}
           >
             <div className="flex mb-1">
               {/* Business Vertical */}

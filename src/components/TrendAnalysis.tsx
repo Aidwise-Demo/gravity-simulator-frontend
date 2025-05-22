@@ -634,7 +634,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
               tickLine={false}
               axisLine={{ stroke: '#e2e8f0' }}
               dy={10}
-              padding={{ right: 10 }}
+              padding={{ right: 30 }}
               label={undefined}
             />
             <YAxis

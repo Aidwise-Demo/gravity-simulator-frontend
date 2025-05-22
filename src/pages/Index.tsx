@@ -1114,7 +1114,6 @@ const Index = () => {
 
   const handleBusinessVerticalsCompanyChange = (value: string) => {
     setBusinessVerticalsCompany(value);
-    
     loadData(period, benchmark, metric, value);
   };
 
@@ -1185,6 +1184,10 @@ const Index = () => {
     data.trendAnalysis.businessVerticals.actualValues &&
     data.trendAnalysis.businessVerticals.targetValues;
 
+  // Calculate the total height for left and right panels
+  // ScoreSummary: h-20 (80px), 2 charts: h-[230px] each, 2 gaps (gap-2): 16px
+  const totalPanelHeight = 80 + 230 + 230 + 16; // = 556px
+
   return (
     <div className="w-full px-8 md:px-8 py-4 bg-white relative">
       {updating && (
@@ -1234,9 +1237,9 @@ const Index = () => {
         </div>
 
         {/* Main Split Layout */}
-        <div className="flex flex-col lg:flex-row gap-2">
-          {/* Left Side: 35% */}
-          <div className="w-full lg:w-[40%] flex flex-col gap-2">
+        <div className="flex flex-col lg:flex-row gap-2 items-end" style={{ minHeight: `${totalPanelHeight}px` }}>
+          {/* Left Side: 40% */}
+          <div className="w-full lg:w-[40%] flex flex-col gap-2" style={{ height: `${totalPanelHeight}px` }}>
             {/* Score Card */}
             <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 h-20">
               <ScoreSummary
@@ -1249,7 +1252,7 @@ const Index = () => {
               />
             </div>
             {/* Overall Trend Analysis */}
-            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[200px]">
+            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
               <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center">
                 <span className="text-[14px] font-semibold text-gray-800">Overall Trend Analysis</span>
               </div>
@@ -1274,15 +1277,15 @@ const Index = () => {
               />
             </div>
             {/* Business Vertical Trend Analysis */}
-            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[200px]">
-          <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center">
-<span className="text-xs font-medium text-gray-800">
-  Business Vertical Trend Analysis
-  {businessVerticalsCompany && businessVerticalsCompany !== 'All Verticals' && (
-    <>: <span className="font-semibold">{businessVerticalsCompany}</span></>
-  )}
-</span>
-</div>
+            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
+              <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center">
+                <span className="text-xs font-medium text-gray-800">
+                  Business Vertical Trend Analysis
+                  {businessVerticalsCompany && businessVerticalsCompany !== 'All Verticals' && (
+                    <>: <span className="font-semibold">{businessVerticalsCompany}</span></>
+                  )}
+                </span>
+              </div>
               <div className="absolute top-1 right-1 z-10">
                 <PeriodSummary
                   period={period}
@@ -1330,25 +1333,27 @@ const Index = () => {
               />
             </div>
           </div>
-          {/* Right Side: 65% */}
-   <div className="w-full lg:w-[60%] relative">
-  {/* Add SimulatedTargetSummary at the top right */}
-  <div className="absolute top-2 right-2 z-10">
-    {data.overallScore.scorePercent !== data.overallScore.actual_target && (
-      <SimulatedTargetSummary
-        simulatedValue={data.overallScore.scorePercent}
-        predefinedValue={data.overallScore.actual_target}
-      />
-    )}
-  </div>
-  <BusinessVerticalRisk
-    verticals={data.businessVerticalTargets}
-    period={period}
-    benchmark={benchmark}
-    metric={metric}
-    onDataUpdate={handleBusinessVerticalUpdate}
-  />
-</div>
+          {/* Right Side: 60% */}
+          <div className="w-full lg:w-[60%] relative flex flex-col justify-end" style={{ height: `${totalPanelHeight}px` }}>
+            {/* Add SimulatedTargetSummary at the top right */}
+            <div className="absolute top-2 right-2 z-10">
+              {data.overallScore.scorePercent !== data.overallScore.actual_target && (
+                <SimulatedTargetSummary
+                  simulatedValue={data.overallScore.scorePercent}
+                  predefinedValue={data.overallScore.actual_target}
+                />
+              )}
+            </div>
+            <div className="h-full flex flex-col">
+              <BusinessVerticalRisk
+                verticals={data.businessVerticalTargets}
+                period={period}
+                benchmark={benchmark}
+                metric={metric}
+                onDataUpdate={handleBusinessVerticalUpdate}
+              />
+            </div>
+          </div>
         </div>
         <SharedLegend />
       </div>
