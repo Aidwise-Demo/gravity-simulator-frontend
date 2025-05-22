@@ -45,7 +45,7 @@ const TriangleLegend = ({ color, label }) => (
 const SharedLegend = () => (
   <div className="flex flex-row w-full justify-between items-center gap-4 py-2 pr-5 border-t border-gray-200 bg-gray-50 rounded-lg">
     {/* Left 40%: Main legend items */}
-    <div className="flex flex-wrap gap-3 items-center" style={{ flexBasis: "40%", minWidth: "200px" }}>
+    <div className="flex flex-wrap gap-3 items-center" style={{ flexBasis: "41%", minWidth: "200px" }}>
       <LegendItem color="#3182ce" label="Actual" />
       <LegendItem color="#3182ce" label="Business Potential" dashed />
       <LegendItem color="#9e38a1" label="Predefined Target" />
@@ -54,8 +54,8 @@ const SharedLegend = () => (
       <LegendItem color="#64748b" label="Projected Industry Average" dashed />
     </div>
     {/* Right 60%: Triangle and Risk legends */}
-    <div className="flex flex-col items-end w-full" style={{ flexBasis: "60%", minWidth: "200px" }}>
-      <div className="flex flex-wrap gap-3 items-center justify-end w-full">
+    <div className="flex flex-col items-end w-full" style={{ flexBasis: "58%", minWidth: "200px" }}>
+      <div className="flex flex-wrap gap-3 items-center justify-start w-full">
         {/* Triangle legends */}
         <TriangleLegend color={POINTER_COLORS['Predefined Target']} label="Predefined Target" />
         <TriangleLegend color={POINTER_COLORS['Simulated Target']} label="Simulated Target" />
@@ -64,7 +64,7 @@ const SharedLegend = () => (
         <TriangleLegend color={POINTER_COLORS['Projected Industry Average']} label="Projected Industry Average" />
         <TriangleLegend color={POINTER_COLORS['cut-off']} label="Cut-off" />
       </div>
-      <div className="flex flex-wrap gap-3 items-center justify-end w-full mt-2">
+      <div className="flex flex-wrap gap-3 items-center justify-start w-full mt-2">
         <RiskLegend color="#22c55e" label="Low-Risk" />
         <RiskLegend color="#eab308" label="Medium-Risk" />
         <RiskLegend color="#ef4444" label="High-Risk" />
