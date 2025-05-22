@@ -162,7 +162,7 @@ const ScoreSummary = ({
 
   // Helper for sign
   const formatWithSign = (val: number) =>
-    (val >= 0 ? "+" : "") + Math.abs(val).toFixed(1) + "%";
+    (val > 0 ? "+" : "") + val.toFixed(1) + "%";
 
   return (
     <div className="p-2 rounded-xl bg-white flex flex-col min-h-[56px]">

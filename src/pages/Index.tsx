@@ -1216,12 +1216,12 @@ const Index = () => {
               options={metricOptions} 
               onChange={handleMetricChange} 
             />
-            <FilterDropdown 
+            {/* <FilterDropdown 
               label="Business Vertical" 
               value={businessVerticalsCompany} 
               options={businessVerticalsCompanyOptions} 
               onChange={handleBusinessVerticalsCompanyChange} 
-            />
+            /> */}
             <button
               onClick={handleReset}
               disabled={isResetting}
@@ -1254,11 +1254,12 @@ const Index = () => {
               />
             </div>
             {/* Overall Trend Analysis */}
-            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
+               <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
               <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center">
                 <span className="text-[14px] font-semibold text-gray-800">Overall Trend Analysis</span>
               </div>
-              <div className="absolute top-1 right-1 z-10">
+              {/* Move PeriodSummary below the heading */}
+              <div className="px-4 pb-2">
                 <PeriodSummary
                   period={period}
                   metric={metric}
@@ -1280,15 +1281,21 @@ const Index = () => {
             </div>
             {/* Business Vertical Trend Analysis */}
             <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
-              <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center">
-                <span className="text-[14px] font-medium text-gray-800">
-                  Business Vertical Trend Analysis
-                  {businessVerticalsCompany && businessVerticalsCompany !== 'All Verticals' && (
-                    <>: <span className="font-semibold">{businessVerticalsCompany}</span></>
-                  )}
-                </span>
-              </div>
-              <div className="absolute top-1 right-1 z-10">
+    <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center justify-between">
+  <span className="text-[14px] font-medium text-gray-800">
+    Business Vertical Trend Analysis
+  </span>
+  <div>
+    <FilterDropdown 
+      label="" 
+      value={businessVerticalsCompany} 
+      options={businessVerticalsCompanyOptions} 
+      onChange={handleBusinessVerticalsCompanyChange} 
+    />
+  </div>
+</div>
+              {/* Move PeriodSummary below the heading */}
+              <div className="px-4 pb-2">
                 <PeriodSummary
                   period={period}
                   metric={metric}
