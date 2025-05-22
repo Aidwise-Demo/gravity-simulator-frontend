@@ -71,7 +71,7 @@ const score_summary_2 = ({
       {/* Header */}
       <div className="flex flex-row items-center justify-between mb-2">
         <h3 className="text-[14px] font-semibold text-gray-800">
-          Simulated {metric} Target {period}: <span className="text-[14px] font-bold text-gray-800">{formatValue(safeActual)}</span>
+          Overall Simulated {metric} for Target {period}: <span className="text-[14px] font-bold text-gray-800">{formatValue(safeActual)}</span>
         </h3>
         <div className="text-xs font-medium text-gray-600">
           <span className="text-xl font-bold text-black-600">{targetsRatio} ‎ ‎ </span> Business verticals

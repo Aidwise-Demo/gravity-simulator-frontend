@@ -169,7 +169,7 @@ const ScoreSummary = ({
       {/* Header */}
       <div className="flex flex-row items-center justify-between mb-2">
         <h3 className="text-[14px] font-semibold text-gray-800">
-          {metric} Target {period}: <span className="text-[14px] font-bold text-gray-800">{formatValue(actual_target)}</span>
+          Overall {metric} Target for {period}: <span className="text-[14px] font-bold text-gray-800">{formatValue(actual_target)}</span>
         </h3>
         <div className="text-xs font-medium text-gray-600">
           <span className="text-xl font-bold text-black-600">{targetsRatio} ‎ ‎ </span> Business verticals
