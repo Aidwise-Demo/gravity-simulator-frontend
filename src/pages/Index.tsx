@@ -1281,16 +1281,16 @@ const Index = () => {
             </div>
             {/* Business Vertical Trend Analysis */}
             <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
-    <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center justify-between">
+<div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center justify-between">
   <span className="text-[14px] font-medium text-gray-800">
     Business Vertical Trend Analysis
   </span>
-  <div>
-    <FilterDropdown 
-      label="" 
-      value={businessVerticalsCompany} 
-      options={businessVerticalsCompanyOptions} 
-      onChange={handleBusinessVerticalsCompanyChange} 
+  <div className="border border-gray-700 rounded shadow-sm">
+    <FilterDropdown
+      label=""
+      value={businessVerticalsCompany}
+      options={businessVerticalsCompanyOptions}
+      onChange={handleBusinessVerticalsCompanyChange}
     />
   </div>
 </div>
