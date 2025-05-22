@@ -1249,6 +1249,8 @@ const Index = () => {
                 actual_target={data.overallScore.actual_target}
                 metric={metric}
                 period={period}
+            previuos_quarter_actual={data.summary.actualValue}
+          previuos_quarter_target={data.summary.targetValue}
               />
             </div>
             {/* Overall Trend Analysis */}
@@ -1279,7 +1281,7 @@ const Index = () => {
             {/* Business Vertical Trend Analysis */}
             <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
               <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center">
-                <span className="text-xs font-medium text-gray-800">
+                <span className="text-[14px] font-medium text-gray-800">
                   Business Vertical Trend Analysis
                   {businessVerticalsCompany && businessVerticalsCompany !== 'All Verticals' && (
                     <>: <span className="font-semibold">{businessVerticalsCompany}</span></>

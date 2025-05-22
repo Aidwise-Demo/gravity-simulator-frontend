@@ -105,6 +105,8 @@ interface ScoreSummaryProps {
   actual_target: number;
   metric: string;
   period: string;
+  previuos_quarter_target: number;
+  previuos_quarter_actual: number;
 }
 
 // Format function for number values
@@ -123,50 +125,82 @@ const formatValue = (value: number) => {
   }
 };
 
+function getPreviousQuarterLabel(period: string) {
+  const match = period.match(/Q([1-4]) (\d{4})/);
+  if (!match) return "Prev Q";
+  let quarter = parseInt(match[1], 10);
+  let year = parseInt(match[2], 10);
+  if (quarter === 1) {
+    quarter = 4;
+    year -= 1;
+  } else {
+    quarter -= 1;
+  }
+  return `Q${quarter} ${year}`;
+}
+
 const ScoreSummary = ({
   scorePercent,
   targetsRatio,
   targetDiff,
   actual_target,
   metric,
-  period
+  period,
+  previuos_quarter_target,
+  previuos_quarter_actual
 }: ScoreSummaryProps) => {
+  // Safe values for calculations
+  const safeActual = isNaN(actual_target) || actual_target < 0 ? 0 : actual_target;
+  const safePrevActual = isNaN(previuos_quarter_actual) || previuos_quarter_actual <= 0 ? 1 : previuos_quarter_actual;
+  const safePrevTarget = isNaN(previuos_quarter_target) || previuos_quarter_target <= 0 ? 1 : previuos_quarter_target;
+
+  // QoQ growth calculations
+  const QoQ_growth_target = ((safeActual - safePrevTarget) / safePrevTarget) * 100;
+  const QoQ_growth_actual = ((safeActual - safePrevActual) / safePrevActual) * 100;
+
+  const prevQuarterLabel = getPreviousQuarterLabel(period);
+
+  // Helper for sign
+  const formatWithSign = (val: number) =>
+    (val >= 0 ? "+" : "") + Math.abs(val).toFixed(1) + "%";
+
   return (
-  <div className="p-2 rounded-xl bg-white flex flex-col min-h-[56px]">
-    {/* Header with aligned 3/6 */}
-    <div className="flex flex-row items-center justify-between mb-2">
-      <h3 className="text-sm font-semibold text-gray-800">
-        {metric} Target Overview {period}
-      </h3>
-      <div className="text-xs font-medium text-gray-600">
-        <span className="text-xl font-bold text-black-600">{targetsRatio} ‎ ‎ </span> Business verticals
+    <div className="p-2 rounded-xl bg-white flex flex-col min-h-[56px]">
+      {/* Header */}
+      <div className="flex flex-row items-center justify-between mb-2">
+        <h3 className="text-[14px] font-semibold text-gray-800">
+          {metric} Target {period}: <span className="text-[14px] font-bold text-gray-800">{formatValue(actual_target)}</span>
+        </h3>
+        <div className="text-xs font-medium text-gray-600">
+          <span className="text-xl font-bold text-black-600">{targetsRatio} ‎ ‎ </span> Business verticals
+        </div>
+      </div>
+      {/* Two column layout */}
+      <div className="flex flex-row items-center justify-between flex-1">
+        {/* Left: QoQ info in one line, xs size for all */}
+        <div className="flex flex-row items-center gap-4">
+          <span className="text-xs font-medium text-gray-600">
+            vs {prevQuarterLabel} Target:{" "}
+            <span className="text-xs font-bold">
+              {formatWithSign(QoQ_growth_target)}
+            </span>
+          </span>
+          <span className="text-xs font-medium text-gray-600">
+            vs {prevQuarterLabel} Actual:{" "}
+            <span className="text-xs font-bold">
+              {formatWithSign(QoQ_growth_actual)}
+            </span>
+          </span>
+        </div>
+        {/* Right: Risk info */}
+        <div className="flex flex-col items-end">
+          <div className="mt-1 py-1 px-2 bg-red-50 rounded-lg">
+            <div className="text-xs font-semibold text-red-700">Face High Target Achievement Risk</div>
+          </div>
+        </div>
       </div>
     </div>
-    
-    {/* Two column layout */}
-    <div className="flex flex-row items-center justify-between flex-1">
-      {/* Left: 2 lines info */}
-      <div className="flex flex-col items-start">
-        <span className="text-xs font-medium text-gray-600">
-          Predefined Target: <span className="text-lg font-bold text-gray-800">{formatValue(actual_target)}</span>
-        </span>
-        <div className="text-xs font-medium text-gray-600 mt-1">
-          {/* Second line for left side - you can add more info here */}
-        </div>
-      </div>
-      
-      {/* Right: 2 lines info */}
-      <div className="flex flex-col items-end">
-        <div className="mt-1 py-1 px-2 bg-red-50 rounded-lg">
-          <div className="text-xs font-semibold text-red-700">Face High Target Achievement Risk</div>
-        </div>
-        <div className="text-xs font-medium text-gray-600 mt-1">
-          {/* Second line for right side - you can add more info here */}
-        </div>
-      </div>
-    </div>
-  </div>
-);
-}
+  );
+};
 
 export default ScoreSummary;

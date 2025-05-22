@@ -584,7 +584,7 @@ import { fetchSimulationData } from '@/services/api'; // Adjust path if needed
 // Triangle pointer (no tooltip here, tooltip will be on the bar/slider group)
 const TrianglePointer = ({ colorClass }) => (
   <div className="flex flex-col items-center relative">
-    <svg className="w-3.5 h-3.5" viewBox="0 0 24 24">
+    <svg className="w-4 h-4" viewBox="0 0 24 24">
       <path d="M12 2L6 14h12z" fill={colorClass} />
     </svg>
   </div>

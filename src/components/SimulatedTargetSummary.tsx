@@ -43,13 +43,13 @@ const SimulatedTargetSummary: React.FC<SimulatedTargetSummaryProps> = ({
 
   return (
     <div className="text-xs font-medium text-gray-700 bg-white rounded px-2 py-1 border border-gray-100">
-      Simulated Target: <span className="font-bold text-blue-700">{formatValue(simulatedValue)}</span>
+      Overall Simulated Target: <span className="font-bold text-black-700">{formatValue(simulatedValue)}</span>
       <span className="ml-1 text-gray-500">
-        (vs Predefined Target: <span className={percentDiff >= 0 ? 'text-green-600' : 'text-red-600'}>
+        (vs Predefined Target: 
           {percentDiff >= 0 ? '+' : ''}
           {percentDiff.toFixed(1)}%
         </span>)
-      </span>
+     
     </div>
   );
 };
