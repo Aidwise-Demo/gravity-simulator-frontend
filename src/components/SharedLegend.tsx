@@ -120,10 +120,18 @@ const SharedLegend = () => (
               minWidth: 220,
             }}
           >
-            <div><strong>Predefined Target</strong>: Projected target set for the current period.</div>
+            <div><strong>Predefined Target</strong>: Target set for the current period.</div>
             <div><strong>Simulated Target</strong>: Value set by the simulator (slider).</div>
-            <div><strong>Baseline Value</strong>: Actual performance for the current period.</div>
-            <div><strong>Potential Value</strong>: Adjusted or estimated current value.</div>
+            <div><strong>Baseline Value</strong>: Projected actual value for the current peroid</div>
+               <div>
+              <strong>Potential Value</strong>: Adjusted Projected Value for the Selected Period (based on Ongoing Initiatives):<br />
+              Baseline Projection × (1 + (0.25 + factor) × factor_based_on_time_left × (0.25 + total_initiative_score))<br />
+              <br />
+              <strong>Where:</strong><br />
+              <strong>factor</strong>: Proportion of initiatives that are currently on track<br />
+              <strong>factor_based_on_time_left</strong>: Proportion of time remaining in the current year<br />
+              <strong>total_initiative_score</strong>: Normalized value representing the number of ongoing initiatives, calculated as the number of initiatives for the business vertical divided by the maximum number of initiatives
+            </div>
             <div><strong>Industry Avg.</strong>: Benchmark average across similar companies.</div>
             <div><strong>Cut-off</strong>: Maximum allowed threshold or upper bound for simulation.</div>
             <div><strong>Low/Medium/High Risk</strong>: Risk levels for business verticals, indicated by color.</div>
