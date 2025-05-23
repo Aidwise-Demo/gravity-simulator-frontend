@@ -122,9 +122,9 @@ const SharedLegend = () => (
           >
             <div><strong>Predefined Target</strong>: Target set for the current period.</div>
             <div><strong>Simulated Target</strong>: Value set by the simulator (slider).</div>
-            <div><strong>Baseline Value</strong>: Projected actual value for the current peroid</div>
+            <div><strong>Baseline Projection</strong>: Projected actual value for the current peroid</div>
                <div>
-              <strong>Potential Value</strong>: Adjusted Projected Value for the Selected Period (based on Ongoing Initiatives):<br />
+              <strong>Business Potential</strong>: Adjusted Projected Value for the Selected Period (based on Ongoing Initiatives):<br />
               Baseline Projection × (1 + (0.25 + factor) × factor_based_on_time_left × (0.25 + total_initiative_score))<br />
               <br />
               <strong>Where:</strong><br />

@@ -1243,7 +1243,7 @@ const Index = () => {
           {/* Left Side: 40% */}
           <div className="w-full lg:w-[40%] flex flex-col gap-2" style={{ height: `${totalPanelHeight}px` }}>
             {/* Score Card */}
-            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 h-20 min-w-[260px] max-w-full">
+            <div className="rounded-lg bg-white overflow-visible flex flex-col border border-gray-200 h-20 min-w-[260px] max-w-full">
               <ScoreSummary
                 scorePercent={data.overallScore.scorePercent}
                 targetsRatio={data.overallScore.actual_target_risk_ratio}
@@ -1256,7 +1256,7 @@ const Index = () => {
               />
             </div>
             {/* Overall Trend Analysis */}
-            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
+            <div className="rounded-lg bg-white overflow-visible flex flex-col border border-gray-200 relative h-[230px]">
               <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center">
                 <span className="text-[14px] font-semibold text-gray-800">Overall Trend Analysis</span>
               </div>
@@ -1282,7 +1282,7 @@ const Index = () => {
               />
             </div>
             {/* Business Vertical Trend Analysis */}
-            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 relative h-[230px]">
+            <div className="rounded-lg bg-white overflow-visible flex flex-col border border-gray-200 relative h-[230px]">
               <div className="w-full bg-gray-50 px-4 py-2 rounded mb-2 flex items-center justify-between">
                 <span className="text-[14px] font-medium text-gray-800">
                   Business Vertical Trend Analysis
@@ -1347,7 +1347,7 @@ const Index = () => {
           {/* Right Side: 60% */}
             <div className="w-full lg:w-[60%] flex flex-col gap-2" style={{ height: `${totalPanelHeight}px` }}>
             {/* Score Card (same width as left) */}
-            <div className="rounded-lg bg-white overflow-hidden flex flex-col border border-gray-200 h-20 min-w-[260px] max-w-full">
+            <div className="rounded-lg bg-white overflow-visible flex flex-col border border-gray-200 h-20 min-w-[260px] max-w-full">
               <ScoreSummary2
                 scorePercent={data.overallScore.scorePercent}
                 targetsRatio={data.overallScore.targetsRatio}
