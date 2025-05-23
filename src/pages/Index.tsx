@@ -1231,6 +1231,12 @@ const Index = () => {
             </button>
           </div>
         </div>
+<h2
+  className="ml-[40.4%] font-medium text-[16px] mb-2"
+  style={{ color: "#006666" }}
+>
+  Business Vertical Targets - Risk Assessment & Scenario Analysis
+</h2>
 
         {/* Main Split Layout */}
         <div className="flex flex-col lg:flex-row gap-2 items-end" style={{ minHeight: `${totalPanelHeight}px` }}>

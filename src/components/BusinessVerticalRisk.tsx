@@ -736,16 +736,16 @@ const BusinessVerticalRisk = ({
   return (
     <div className="w-full h-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
       {/* Title */}
-   <h2
+   {/* <h2
   className="font-medium text-[14px] mb-2"
   style={{ color: "#006666" }}
 >
   Business Vertical Targets - Risk Assessment & Scenario Analysis
-</h2>
+</h2> */}
    
 
       {/* Table Header */}
-      <div className="flex w-full text-xs font-medium mb-2 px-2 py-1 bg-gray-100 border border-gray-200 rounded-t-lg">
+      <div className="flex w-full text-[14px] font-medium mb-6 px-2 py-1 bg-gray-100 border border-gray-200 rounded-t-lg">
         <div className="w-1/4 px-2">Business Verticals</div>
         <div className="w-2/5 text-center">Target Simulator</div>
         <div className="w-1/5 flex justify-end items-center gap-1 px-2">
@@ -887,7 +887,7 @@ const BusinessVerticalRisk = ({
                 </div>
                 {/* Target draggable marker */}
                 <div
-                  className="absolute h-10 w-2 bg-pink-600 cursor-move -top-4 z-30 shadow-sm rounded-sm"
+                  className="absolute h-6 w-2 bg-pink-600 cursor-move -top-0 z-30 shadow-sm rounded-sm"
                   style={{
                     left: `${getPositionPercentage(simulatedTargetValue, vertical.cutoff)}%`,
                     transform: 'translateX(-50%)'
