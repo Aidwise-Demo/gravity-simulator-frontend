@@ -14,7 +14,6 @@ const POINTER_COLORS = {
 
 const TriangleLegend = ({ color, label }) => (
   <div className="flex items-center gap-1">
-    {/* Custom lines for Simulated/Predefined Target */}
     {label === "Simulated Target" ? (
       <span
         className="inline-block rounded"
@@ -42,6 +41,29 @@ const TriangleLegend = ({ color, label }) => (
   </div>
 );
 
+const InfoIconWithTooltip = ({ tooltip }) => (
+  <span className="group relative ml-1 cursor-pointer align-middle">
+    <svg
+      className="w-4 h-4 text-gray-500 hover:text-gray-700"
+      fill="currentColor"
+      viewBox="0 0 20 20"
+    >
+      <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+    </svg>
+    <div
+      className="absolute z-50 hidden group-hover:block bg-gray-700 text-white rounded shadow-lg p-2 text-xs w-max max-w-xs whitespace-pre-wrap"
+      style={{
+        top: '-10px',
+        left: '110%',
+        transform: 'translateY(-100%)',
+        minWidth: 220,
+      }}
+    >
+      {tooltip}
+    </div>
+  </span>
+);
+
 const SharedLegend = () => (
   <div className="flex flex-row w-full justify-between items-center gap-4 py-2 pr-5 border-t border-gray-200 bg-gray-50 rounded-lg">
     {/* Left 40%: Main legend items */}
@@ -52,6 +74,18 @@ const SharedLegend = () => (
       <LegendItem color="#9e38a1" label="Simulated Target" dashed />
       <LegendItem color="#64748b" label="Industry Average" />
       <LegendItem color="#64748b" label="Projected Industry Average" dashed />
+      <InfoIconWithTooltip
+        tooltip={
+          <>
+            <div><strong>Actual</strong>: Actual value for the selected period.</div>
+            <div><strong>Business Potential</strong>: Maximum achievable value.</div>
+            <div><strong>Predefined Target</strong>: Projected target set for the current period.</div>
+            <div><strong>Simulated Target</strong>: Value set by the simulator (slider).</div>
+            <div><strong>Industry Average</strong>: Benchmark average across similar companies.</div>
+            <div><strong>Projected Industry Average</strong>: Projected industry average for the period.</div>
+          </>
+        }
+      />
     </div>
     {/* Right 60%: Triangle and Risk legends */}
     <div className="flex flex-col items-end w-full" style={{ flexBasis: "58%", minWidth: "200px" }}>
@@ -69,7 +103,7 @@ const SharedLegend = () => (
         <RiskLegend color="#eab308" label="Medium-Risk" />
         <RiskLegend color="#ef4444" label="High-Risk" />
         {/* Info icon with tooltip */}
-        <div className="group relative ml-2 cursor-pointer">
+        <span className="group relative ml-2 cursor-pointer align-middle">
           <svg
             className="w-4 h-4 text-gray-500 hover:text-gray-700"
             fill="currentColor"
@@ -77,7 +111,15 @@ const SharedLegend = () => (
           >
             <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
           </svg>
-          <div className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-max max-w-xs p-2 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-wrap">
+          <div
+            className="absolute z-50 hidden group-hover:block bg-gray-700 text-white rounded shadow-lg p-2 text-xs w-max max-w-xs whitespace-pre-wrap"
+            style={{
+              top: '-10px',
+              left: '110%',
+              transform: 'translateY(-100%)',
+              minWidth: 220,
+            }}
+          >
             <div><strong>Predefined Target</strong>: Projected target set for the current period.</div>
             <div><strong>Simulated Target</strong>: Value set by the simulator (slider).</div>
             <div><strong>Baseline Value</strong>: Actual performance for the current period.</div>
@@ -86,7 +128,7 @@ const SharedLegend = () => (
             <div><strong>Cut-off</strong>: Maximum allowed threshold or upper bound for simulation.</div>
             <div><strong>Low/Medium/High Risk</strong>: Risk levels for business verticals, indicated by color.</div>
           </div>
-        </div>
+        </span>
       </div>
     </div>
   </div>
