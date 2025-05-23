@@ -628,8 +628,8 @@ const BusinessVerticalRisk = ({
         vertical.current,
         vertical.currentStar,
         vertical.industryAverage,
-        vertical.predictedTarget,
-        vertical.predictedNewTarget
+        vertical.predictedTarget
+        // vertical.predictedNewTarget
       ].filter(value => isValidNumber(value));
       const maxValue = Math.max(...values);
       const newCutoff = maxValue * 1.1;
@@ -735,15 +735,6 @@ const BusinessVerticalRisk = ({
 
   return (
     <div className="w-full h-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
-      {/* Title */}
-   {/* <h2
-  className="font-medium text-[14px] mb-2"
-  style={{ color: "#006666" }}
->
-  Business Vertical Targets - Risk Assessment & Scenario Analysis
-</h2> */}
-   
-
       {/* Table Header */}
       <div className="flex w-full text-[14px] font-medium mb-6 px-2 py-1 bg-gray-100 border border-gray-200 rounded-t-lg">
         <div className="w-1/4 px-2">Business Verticals</div>
@@ -778,6 +769,19 @@ const BusinessVerticalRisk = ({
       {verticals.map((vertical, idx) => {
         // Simulated target value (slider value)
         const simulatedTargetValue = vertical.predictedNewTarget !== undefined ? vertical.predictedNewTarget : vertical.predictedTarget;
+
+        // Thresholds for color segments
+// ...inside your map for each vertical...
+const { thresholds = {}, cutoff = 1 } = vertical;
+const ntv_low_medium = typeof thresholds.ntv_low_medium === 'number' ? thresholds.ntv_low_medium : cutoff * 0.33;
+const ntv_medium_high = typeof thresholds.ntv_medium_high === 'number' ? thresholds.ntv_medium_high : cutoff * 0.66;
+
+const safeLow = Math.min(ntv_low_medium, cutoff);
+const safeHigh = Math.min(ntv_medium_high, cutoff);
+
+const greenWidth = Math.max(0, (safeLow / cutoff) * 100);
+const yellowWidth = Math.max(0, ((safeHigh - safeLow) / cutoff) * 100);
+const redWidth = Math.max(0, 100 - greenWidth - yellowWidth);
 
         // Gather all pointer data for this vertical (except Predefined Target)
         const pointerData = [
@@ -859,7 +863,43 @@ const BusinessVerticalRisk = ({
                 onMouseMove={hoveredIdx === idx ? handleMouseMove : undefined}
                 style={{ cursor: 'pointer' }}
               >
-                <div className="w-full h-1.5 bg-indigo-500 rounded-full my-2"></div>
+                {/* Multi-color bar */}
+                <div className="w-full relative h-1.5 my-2 rounded-full overflow-hidden">
+                  {/* Green segment */}
+                  <div
+                    className="absolute left-0 top-0 h-full bg-green-500"
+                    style={{
+                      width: `${greenWidth}%`,
+                      borderTopLeftRadius: '8px',
+                      borderBottomLeftRadius: '8px',
+                      borderTopRightRadius: yellowWidth === 0 && redWidth === 0 ? '8px' : '0',
+                      borderBottomRightRadius: yellowWidth === 0 && redWidth === 0 ? '8px' : '0',
+                    }}
+                  />
+                  {/* Yellow segment */}
+                  {yellowWidth > 0 && (
+                    <div
+                      className="absolute top-0 h-full bg-yellow-400"
+                      style={{
+                        left: `${greenWidth}%`,
+                        width: `${yellowWidth}%`,
+                        borderRadius: redWidth === 0 ? '0 8px 8px 0' : '0',
+                      }}
+                    />
+                  )}
+                  {/* Red segment */}
+                  {redWidth > 0 && (
+                    <div
+                      className="absolute top-0 h-full bg-red-500"
+                      style={{
+                        left: `${greenWidth + yellowWidth}%`,
+                        width: `${redWidth}%`,
+                        borderTopRightRadius: '8px',
+                        borderBottomRightRadius: '8px',
+                      }}
+                    />
+                  )}
+                </div>
                 {/* Predefined Target as a thin pink line */}
                 <div
                   className="absolute top-0 bottom-0"

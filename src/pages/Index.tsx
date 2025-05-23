@@ -1189,6 +1189,17 @@ const Index = () => {
   // Calculate the total height for left and right panels
   // ScoreSummary: h-20 (80px), 2 charts: h-[230px] each, 2 gaps (gap-2): 16px
   const totalPanelHeight = 80 + 230 + 230 + 16; // = 556px
+  const verticalsWithThresholds = Array.isArray(data.businessVerticalTargets)
+  ? data.businessVerticalTargets.map(vertical => ({
+      ...vertical,
+      thresholds:
+        data.thresholds &&
+        data.thresholds[metric] &&
+        data.thresholds[metric][vertical.name]
+          ? data.thresholds[metric][vertical.name]
+          : undefined
+    }))
+  : [];
 
   return (
     <div className="w-full px-8 md:px-8 py-4 bg-white relative">
@@ -1238,7 +1249,7 @@ const Index = () => {
   </h2>
   <span className="ml-[22%]">
     <h2 className="font-medium text-[16px]" style={{ color: "#006666" }}>
-      Target Scenario Analysis & Risk Forecast by Business Vertical
+      Target Scenario Analysis & Risk Forecast by Business Verticals
     </h2>
   </span>
 </div>
@@ -1367,7 +1378,9 @@ const Index = () => {
             {/* Simulator Table (BusinessVerticalRisk) with increased height and no scroll */}
             <div className="flex flex-col" style={{ height: '469px' /* 230+230+16-20 (score card height) */ }}>
               <BusinessVerticalRisk
-                verticals={data.businessVerticalTargets}
+                // verticals={data.businessVerticalTargets}
+                verticals={verticalsWithThresholds}
+
                 period={period}
                 benchmark={benchmark}
                 metric={metric}
