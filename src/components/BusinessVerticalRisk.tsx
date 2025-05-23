@@ -621,25 +621,26 @@ const BusinessVerticalRisk = ({
     setVerticals(initialVerticals);
   }, [initialVerticals]);
 
+
   // Calculate the maximum cutoff value based on the largest value plus 10%
-  useEffect(() => {
-    const updatedVerticals = [...initialVerticals].map(vertical => {
-      const values = [
-        vertical.current,
-        vertical.currentStar,
-        vertical.industryAverage,
-        vertical.predictedTarget
-        // vertical.predictedNewTarget
-      ].filter(value => isValidNumber(value));
-      const maxValue = Math.max(...values);
-      const newCutoff = maxValue * 1.1;
-      return {
-        ...vertical,
-        cutoff: newCutoff
-      };
-    });
-    setVerticals(updatedVerticals);
-  }, [initialVerticals]);
+  // useEffect(() => {
+  //   const updatedVerticals = [...initialVerticals].map(vertical => {
+  //     const values = [
+  //       vertical.current,
+  //       vertical.currentStar,
+  //       vertical.industryAverage,
+  //       vertical.predictedTarget
+  //       // vertical.predictedNewTarget
+  //     ].filter(value => isValidNumber(value));
+  //     const maxValue = Math.max(...values);
+  //     const newCutoff = maxValue * 1.1;
+  //     return {
+  //       ...vertical,
+  //       cutoff: newCutoff
+  //     };
+  //   });
+  //   setVerticals(updatedVerticals);
+  // }, [initialVerticals]);
 
   const formatValue = (value) => {
     if (value === null || value === undefined || value === '' || value === 'NA') return 'NA';

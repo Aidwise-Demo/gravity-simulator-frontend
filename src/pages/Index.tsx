@@ -1189,16 +1189,36 @@ const Index = () => {
   // Calculate the total height for left and right panels
   // ScoreSummary: h-20 (80px), 2 charts: h-[230px] each, 2 gaps (gap-2): 16px
   const totalPanelHeight = 80 + 230 + 230 + 16; // = 556px
-  const verticalsWithThresholds = Array.isArray(data.businessVerticalTargets)
-  ? data.businessVerticalTargets.map(vertical => ({
-      ...vertical,
-      thresholds:
+const verticalsWithThresholds = Array.isArray(data.businessVerticalTargets)
+  ? data.businessVerticalTargets.map(vertical => {
+      const thresholds =
         data.thresholds &&
         data.thresholds[metric] &&
         data.thresholds[metric][vertical.name]
           ? data.thresholds[metric][vertical.name]
-          : undefined
-    }))
+          : {};
+
+      const values = [
+        vertical.current,
+        vertical.currentStar,
+        vertical.industryAverage,
+        vertical.predictedTarget
+      ].filter(
+        v => v !== null && v !== undefined && v !== '' && v !== 'NA' && !isNaN(v)
+      );
+      const maxValue = Math.max(...values);
+      const ntv_medium_high = typeof thresholds.ntv_medium_high === 'number' ? thresholds.ntv_medium_high : 0;
+      const cutoff = Math.max(
+        maxValue * 1.1,
+        ntv_medium_high * 1.2
+      );
+
+      return {
+        ...vertical,
+        thresholds,
+        cutoff
+      };
+    })
   : [];
 
   return (
