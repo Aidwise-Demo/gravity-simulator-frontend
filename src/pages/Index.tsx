@@ -1204,7 +1204,7 @@ const Index = () => {
       <div className="flex flex-col space-y-2">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between">
-          <h1 className="text-[18px] font-bold" style={{ color: "#006666" }}>Dubai Holdings</h1>
+          <h1 className="text-[18px] font-bold" style={{ color: "#006666" }}></h1>
           <div className="flex flex-col sm:flex-row gap-2 mt-4 md:mt-0">
             <FilterDropdown 
               label="Period" 
@@ -1231,12 +1231,17 @@ const Index = () => {
             </button>
           </div>
         </div>
-<h2
-  className="ml-[40.4%] font-medium text-[16px] mb-2"
-  style={{ color: "#006666" }}
->
-  Business Vertical Targets - Risk Assessment & Scenario Analysis
-</h2>
+        
+  <div className="flex flex-row w-full mb-2">
+  <h2 className="font-medium text-[16px]" style={{ color: "#006666" }}>
+    Performance Trends and Target Overview
+  </h2>
+  <span className="ml-[22%]">
+    <h2 className="font-medium text-[16px]" style={{ color: "#006666" }}>
+      Target Scenario Analysis & Risk Forecast by Business Vertical
+    </h2>
+  </span>
+</div>
 
         {/* Main Split Layout */}
         <div className="flex flex-col lg:flex-row gap-2 items-end" style={{ minHeight: `${totalPanelHeight}px` }}>
