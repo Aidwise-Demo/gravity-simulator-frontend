@@ -1315,6 +1315,7 @@ const verticalsWithThresholds = Array.isArray(data.businessVerticalTargets)
                 simulatedActualValues={data.trendAnalysis.overall.simulatedActualValues}
                 selectedQuarter={period}
                 metric={metric}
+                period={period}
               />
             </div>
             {/* Business Vertical Trend Analysis */}
@@ -1377,6 +1378,7 @@ const verticalsWithThresholds = Array.isArray(data.businessVerticalTargets)
                     ? data.thresholds[metric][businessVerticalsCompany]
                     : null
                 }
+                period={period}
               />
             </div>
           </div>

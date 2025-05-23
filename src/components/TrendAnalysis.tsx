@@ -445,6 +445,7 @@ interface TrendAnalysisProps {
     ntv_low_medium: number;
     ntv_medium_high: number;
   };
+  period: string;
 }
 
 const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
@@ -458,7 +459,8 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
   simulatedIndustryValues = [],
   selectedQuarter,
   metric,
-  thresholds
+  thresholds,
+  period
 }) => {
   // Define all quarters till Q4 2025
   const allQuarters = [
@@ -484,6 +486,20 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
     }
     return value;
   };
+  function getPreviousQuarter(quarterStr: string) {
+  const match = quarterStr.match(/Q([1-4]) (\d{4})/);
+  if (!match) return quarterStr;
+  let q = parseInt(match[1], 10);
+  let year = parseInt(match[2], 10);
+  if (q === 1) {
+    q = 4;
+    year -= 1;
+  } else {
+    q -= 1;
+  }
+  return `Q${q} ${year}`;
+}
+
 
   // Format value for tooltip (2 decimal places)
   const formatValueTooltip = (value: number) => {
@@ -527,7 +543,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
     // Only show simulatedActual for Q1 2025 and Q2 2025
     if (
       simulatedActualValues.length > 0 &&
-      (quarter === "Q1 2025" || quarter === "Q2 2025")
+      (quarter === getPreviousQuarter(period) || quarter === period)
     ) {
       dataPoint.simulatedActual =
         idx !== -1 && simulatedActualValues[idx] != null
@@ -539,7 +555,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
     // Only show simulatedTarget for Q1 2025 and Q2 2025
     if (
       simulatedTargetValues.length > 0 &&
-      (quarter === "Q1 2025" || quarter === "Q2 2025")
+      (quarter ===  getPreviousQuarter(period) || quarter === period)
     ) {
       dataPoint.simulatedTarget =
         idx !== -1 && simulatedTargetValues[idx] != null
@@ -552,7 +568,7 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
     if (
       simulatedIndustryValues &&
       simulatedIndustryValues.length > 0 &&
-      (quarter === "Q1 2025" || quarter === "Q2 2025")
+      (quarter ===  getPreviousQuarter(period) || quarter === period)
     ) {
       dataPoint.simulatedIndustry =
         idx !== -1 && simulatedIndustryValues[idx] != null
@@ -618,11 +634,11 @@ const TrendAnalysis: React.FC<TrendAnalysisProps> = ({
                 />
                 {/* Red: ntv_medium_high to yMax */}
                 <ReferenceArea
-                  y1={thresholds.ntv_medium_high}
-                  y2={yMax * 1.05}
+                  y1={Math.min(thresholds.ntv_medium_high, yMax)}
+                  y2={yMax*1.05} 
                   strokeOpacity={0}
                   fill="rgba(239, 68, 68, 0.29)"
-                  ifOverflow="extendDomain"
+                  ifOverflow="hidden"
                 />
               </>
             )}
