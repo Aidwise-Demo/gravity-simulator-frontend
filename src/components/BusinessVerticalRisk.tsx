@@ -621,27 +621,6 @@ const BusinessVerticalRisk = ({
     setVerticals(initialVerticals);
   }, [initialVerticals]);
 
-
-  // Calculate the maximum cutoff value based on the largest value plus 10%
-  // useEffect(() => {
-  //   const updatedVerticals = [...initialVerticals].map(vertical => {
-  //     const values = [
-  //       vertical.current,
-  //       vertical.currentStar,
-  //       vertical.industryAverage,
-  //       vertical.predictedTarget
-  //       // vertical.predictedNewTarget
-  //     ].filter(value => isValidNumber(value));
-  //     const maxValue = Math.max(...values);
-  //     const newCutoff = maxValue * 1.1;
-  //     return {
-  //       ...vertical,
-  //       cutoff: newCutoff
-  //     };
-  //   });
-  //   setVerticals(updatedVerticals);
-  // }, [initialVerticals]);
-
   const formatValue = (value) => {
     if (value === null || value === undefined || value === '' || value === 'NA') return 'NA';
     if (typeof value === 'number') {
@@ -734,55 +713,66 @@ const BusinessVerticalRisk = ({
     return POINTER_COLORS[key.charAt(0).toUpperCase() + key.slice(1)];
   };
 
+  // Check if EBITDA column should be shown
+  const showEBITDAColumn = metric === "EBITDA Margin";
+
   return (
     <div className="w-full h-full bg-white p-4 border border-gray-200 rounded-lg shadow-sm">
       {/* Table Header */}
-      <div className="flex w-full text-[14px] font-medium mb-6 px-2 py-1 bg-gray-100 border border-gray-200 rounded-t-lg">
-        <div className="w-1/4 px-2">Business Verticals</div>
-        <div className="w-2/5 text-center">Target Simulator</div>
-        <div className="w-1/5 flex justify-end items-center gap-1 px-2">
-          Status
-          {/* Info icon for Status */}
-          <span className="group relative ml-1 cursor-pointer">
-            <svg
-              className="w-4 h-4 text-gray-500 hover:text-gray-700"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
-            </svg>
-            <div className="absolute right-0 mt-2 w-[300px] p-2 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-line">
-              <div><b>1. Gap Calculations:</b></div>
-              <div>gap_curr = (new_target_value - Predicted_Actual_Value) / Cut_off_value</div>
-              <div>gap_expected = (new_target_value - current*) / Cut_off_value</div>
-              <div>gap_industry = (Predicted_Industry_average - Predicted_Actual_Value) / Cut_off_value</div>
-              <div className="mt-2"><b>2. Risk Composite Score:</b></div>
-              <div>risk_composite = 0.5 × gap_curr + 0.3 × gap_expected + 0.2 × gap_industry</div>
-              <div className="mt-2"><b>3. Risk Level Classification:</b></div>
-              <div>Low Risk if risk_composite ≤ 0.1</div>
-              <div>Medium Risk if 0.1 &lt; risk_composite ≤ 0.25</div>
-              <div>High Risk if risk_composite &gt; 0.25</div>
-            </div>
-          </span>
-        </div>
+     <div className="flex w-full text-[14px] font-medium mb-6 px-2 py-1 bg-gray-100 border border-gray-200 rounded-t-lg">
+  <div className="w-1/4 px-2">Business Verticals</div>
+
+  <div className={`${showEBITDAColumn ? "w-2/5" : "w-2/4"} flex justify-center items-center gap-1 px-2`}>
+    Target Simulator
+  </div>
+
+  {showEBITDAColumn && (
+    <div className="w-1/4 text-center">EBITDA Target</div>
+  )}
+
+  <div className={`${showEBITDAColumn ? "w-1/5" : "w-1/4"} flex justify-center items-center gap-1 px-2`}>
+    Status
+    {/* Info icon for Status */}
+    <span className="group relative ml-1 cursor-pointer">
+      <svg
+        className="w-4 h-4 text-gray-500 hover:text-gray-700"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+      >
+        <path d="M9 9h1v6H9V9zm0-4h1v2H9V5zm1-5C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zm0 18c-4.41 0-8-3.59-8 8-3.59 8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+      </svg>
+      <div className="absolute right-0 mt-2 w-[300px] p-2 text-xs bg-gray-700 text-white rounded shadow-lg hidden group-hover:block z-50 whitespace-pre-line">
+        <div><b>1. Gap Calculations:</b></div>
+        <div>gap_curr = (new_target_value - Predicted_Actual_Value) / Cut_off_value</div>
+        <div>gap_expected = (new_target_value - current*) / Cut_off_value</div>
+        <div>gap_industry = (Predicted_Industry_average - Predicted_Actual_Value) / Cut_off_value</div>
+        <div className="mt-2"><b>2. Risk Composite Score:</b></div>
+        <div>risk_composite = 0.5 × gap_curr + 0.3 × gap_expected + 0.2 × gap_industry</div>
+        <div className="mt-2"><b>3. Risk Level Classification:</b></div>
+        <div>Low Risk if risk_composite ≤ 0.1</div>
+        <div>Medium Risk if 0.1 &lt; risk_composite ≤ 0.25</div>
+        <div>High Risk if risk_composite &gt; 0.25</div>
       </div>
+    </span>
+  </div>
+</div>
+
 
       {verticals.map((vertical, idx) => {
         // Simulated target value (slider value)
         const simulatedTargetValue = vertical.predictedNewTarget !== undefined ? vertical.predictedNewTarget : vertical.predictedTarget;
 
         // Thresholds for color segments
-// ...inside your map for each vertical...
-const { thresholds = {}, cutoff = 1 } = vertical;
-const ntv_low_medium = typeof thresholds.ntv_low_medium === 'number' ? thresholds.ntv_low_medium : cutoff * 0.33;
-const ntv_medium_high = typeof thresholds.ntv_medium_high === 'number' ? thresholds.ntv_medium_high : cutoff * 0.66;
+        const { thresholds = {}, cutoff = 1 } = vertical;
+        const ntv_low_medium = typeof thresholds.ntv_low_medium === 'number' ? thresholds.ntv_low_medium : cutoff * 0.33;
+        const ntv_medium_high = typeof thresholds.ntv_medium_high === 'number' ? thresholds.ntv_medium_high : cutoff * 0.66;
 
-const safeLow = Math.min(ntv_low_medium, cutoff);
-const safeHigh = Math.min(ntv_medium_high, cutoff);
+        const safeLow = Math.min(ntv_low_medium, cutoff);
+        const safeHigh = Math.min(ntv_medium_high, cutoff);
 
-const greenWidth = Math.max(0, (safeLow / cutoff) * 100);
-const yellowWidth = Math.max(0, ((safeHigh - safeLow) / cutoff) * 100);
-const redWidth = Math.max(0, 100 - greenWidth - yellowWidth);
+        const greenWidth = Math.max(0, (safeLow / cutoff) * 100);
+        const yellowWidth = Math.max(0, ((safeHigh - safeLow) / cutoff) * 100);
+        const redWidth = Math.max(0, 100 - greenWidth - yellowWidth);
 
         // Gather all pointer data for this vertical (except Predefined Target)
         const pointerData = [
@@ -858,7 +848,7 @@ const redWidth = Math.max(0, 100 - greenWidth - yellowWidth);
               <div className="text-xs font-medium w-1/4 px-2 flex items-center">{vertical.name}</div>
               {/* Simulator */}
               <div
-                className="w-2/5 relative flex items-center group"
+                className={`${showEBITDAColumn ? "w-2/5" : "w-3/5"} relative flex items-center group`}
                 onMouseEnter={() => setHoveredIdx(idx)}
                 onMouseLeave={() => setHoveredIdx(null)}
                 onMouseMove={hoveredIdx === idx ? handleMouseMove : undefined}
@@ -991,8 +981,14 @@ const redWidth = Math.max(0, 100 - greenWidth - yellowWidth);
                   </div>
                 )}
               </div>
+              {/* EBITDA Target - Only show when metric is "EBITDA Margin" */}
+              {showEBITDAColumn && (
+                <div className="text-xs font-medium w-1/4 px-2 flex items-center justify-center">
+                  {formatValue(vertical.EBITDA_of_margin)}
+                </div>
+              )}
               {/* Status */}
-              <div className="w-1/5 flex justify-end items-center gap-1 px-2">
+              <div className={`${showEBITDAColumn ? "w-1/5" : "w-1/4"} flex justify-center items-center gap-1 px-2`}>
                 <div className={`${getStatusColor(vertical.status)} w-4 h-4 rounded-full border border-gray-200 shadow-sm`}></div>
               </div>
             </div>
